@@ -71,11 +71,34 @@ async function syncToCloud(){
  try{await api('/rest/v1/app_state?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:currentUser.id,data:db,updated_at:new Date().toISOString()})},token);status('공동 저장 완료')}
  catch(e){status('저장 실패');showError('클라우드 저장 오류: '+e.message)}
 }
+function seedStarterContent(){
+ if((db.refs||[]).length||(db.plans||[]).length||(db.tasks||[]).length)return false;
+ db={
+  refs:[
+   {id:crypto.randomUUID(),title:'AreYouKiddingTV × Mountain Dew — 제품을 코미디 상황극 안에 자연스럽게 삽입',platform:'TikTok 캠페인 사례',url:'https://sparkmedia.la/work/areyoukiddingtv',note:'실제 캠페인 사례 페이지. 크리에이터 특유의 장난·상황극이 먼저 나오고 제품은 이야기 안에 등장한다. 참고 포인트: 제품 설명보다 캐릭터와 웃음이 먼저.'},
+   {id:crypto.randomUUID(),title:'Bloom Nutrition — 일상 웰니스 루틴형 콘텐츠',platform:'TikTok 캠페인 사례',url:'https://ads.tiktok.com/business/en-US/inspiration/bloom-nutrition-cpnew',note:'TikTok 공식 비즈니스 사례. 일상 루틴, 제품 사용 장면, 쉬운 정보 전달을 여러 크리에이티브로 전개. 참고 포인트: 매일 하는 행동에 제품을 끼워 넣기.'},
+   {id:crypto.randomUUID(),title:'WeightWatchers — 크리에이터 개인 스토리와 유머',platform:'TikTok 캠페인 분석',url:'https://www.netinfluencer.com/how-jre-pitched-weight-watchers-on-organic-fit-then-turned-it-around-in-a-week/',note:'크리에이터의 평소 이야기와 농담으로 시작해 브랜드 경험으로 연결한 사례 분석. 참고 포인트: 광고 멘트보다 본인 캐릭터와 실제 말투를 살리기.'},
+   {id:crypto.randomUUID(),title:'Nutrition & Supplements — 글로벌 협찬 숏폼 레퍼런스 모음',platform:'Instagram / TikTok 사례 모음',url:'https://www.modash.io/content-library/categories/nutrition-and-supplements',note:'영양·웰니스 브랜드의 실제 크리에이터 협업 게시물 모음. 참고 포인트: 제품 노출 타이밍, 크리에이터별 톤, 댓글 반응을 비교해서 보기.'}
+  ],
+  plans:[
+   {id:crypto.randomUUID(),title:'다이어트 제품보다 내 입이 더 바쁜 날',kind:'토크 / 썰',goal:'댓글 / 참여',hook:'“나 진짜 관리한다고 했지, 입 닫는다고는 안 했어.”',script:'0–3초: 카메라 보며 진지하게 선언.\n3–8초: 바로 간식이나 야식 생각이 나는 상황극.\n8–15초: 본인 관리 루틴을 솔직하게 이야기하며 제품을 일상 소품처럼 등장.\n15–22초: “너희도 이런 날 있지?” 질문으로 댓글 유도.\n제품 효능·체중 변화 보장 표현 없이 실제 사용 경험과 표시된 정보만 전달.'},
+   {id:crypto.randomUUID(),title:'래퍼의 현실적인 하루 루틴 — 관리도 루틴처럼',kind:'일상 브이로그',goal:'구매 전환',hook:'“스케줄 꼬여도 이건 챙기고 나감.”',script:'0–3초: 외출 준비 중 빠르게 컷 전환.\n3–8초: 작업실·차 안·운동 전후 등 실제 하루 장면.\n8–14초: 제품을 평소 챙기는 물건처럼 자연스럽게 사용.\n14–20초: 맛·휴대성·섭취 편의 등 확인 가능한 개인 경험 설명.\n마지막: 제품 정보와 구매 경로를 짧게 안내하고 광고·협찬 관계 명확히 표시.'},
+   {id:crypto.randomUUID(),title:'친구가 내 관리 루틴을 감시한다면?',kind:'상황극',goal:'조회수 / 도달',hook:'“너 오늘도 그거 안 챙겼지?”',script:'0–3초: 친구 역할이 갑자기 등장해 추궁.\n3–9초: 과장된 변명과 티키타카로 웃음 만들기.\n9–15초: 제품을 챙기는 장면을 대화 흐름에 삽입.\n15–22초: 역할을 바꿔 한 번 더 반전.\n제품을 만능 해결책처럼 묘사하지 말고 루틴의 한 부분으로만 표현.'},
+   {id:crypto.randomUUID(),title:'팔로워 댓글에 솔직하게 답하기 — 이거 진짜 매일 해?',kind:'토크 / 썰',goal:'구매 전환',hook:'댓글 캡처: “언니 그거 협찬 아니고 진짜 먹어요?”',script:'0–3초: 실제 댓글을 화면에 띄우고 바로 반응.\n3–10초: 협찬 여부와 실제 사용 여부를 투명하게 답변.\n10–18초: 언제·어떻게 사용하는지, 마음에 든 점과 아쉬운 점을 구체적으로 설명.\n18–23초: 성분·섭취법 등은 제품 표시사항 기준으로 안내하고 질문 유도.'},
+   {id:crypto.randomUUID(),title:'관리한다고 선언한 사람의 장바구니 공개',kind:'리뷰 / 사용기',goal:'댓글 / 참여',hook:'“내 장바구니 보면 관리하는 사람인지 바로 나옴.”',script:'0–3초: 장바구니를 카메라 앞에 공개.\n3–10초: 평소 먹는 음식과 생활용품을 빠르게 소개하며 캐릭터 살리기.\n10–16초: 제품을 다른 일상 아이템과 함께 보여주고 선택 이유 설명.\n16–22초: 팔로워에게 본인 장바구니 필수템 질문.\n효능 과장이나 전후 비교 없이 취향·편의성 중심으로 구성.'}
+  ],
+  tasks:[]
+ };
+ render();
+ return true;
+}
 async function loadCloud(){
  const token=await validToken();if(!token)throw new Error('로그인 세션이 만료됐어. 다시 로그인해 줘.');
  const rows=await api('/rest/v1/app_state?select=data&user_id=eq.'+encodeURIComponent(currentUser.id),{},token);
  if(rows&&rows.length&&rows[0].data){remoteBusy=true;db=rows[0].data;localStorage.setItem(KEY,JSON.stringify(db));render();remoteBusy=false}
- else await syncToCloud();
+ const seeded=seedStarterContent();
+ if(seeded){localStorage.setItem(KEY,JSON.stringify(db));await syncToCloud()}
+ else if(!rows||!rows.length)await syncToCloud();
  status('공동 저장 연결됨');
 }
 async function pollCloud(){
