@@ -10,49 +10,91 @@
 <section class="view hidden" id="plans"><div class="panel"><h2>콘텐츠 기획 추가</h2><div class="hint">광고 티보다 캐릭터·일상·유머가 살아 있는 콘텐츠 중심.</div><form id="pf"><div class="field"><label>기획 제목</label><input id="pt" required placeholder="예: 운동 가기 싫은 날 현실 토크"></div><div class="two"><div class="field"><label>형식</label><select id="pk"><option>상황극</option><option>일상 브이로그</option><option>토크 / 썰</option><option>챌린지</option><option>리뷰 / 사용기</option></select></div><div class="field"><label>목표</label><select id="pg"><option>구매 전환</option><option>조회수 / 도달</option><option>댓글 / 참여</option><option>브랜드 인지도</option></select></div></div><div class="field"><label>오프닝 후킹</label><textarea id="ph" placeholder="시청자가 멈춰서 보게 만들 첫 장면 또는 첫마디"></textarea></div><div class="field"><label>영상 흐름 / 대본 메모</label><textarea id="ps" placeholder="1. 첫 장면&#10;2. 상황과 공감&#10;3. 제품이 자연스럽게 등장&#10;4. 마무리"></textarea></div><button class="primary">+ 기획 저장</button></form></div><div class="panel"><h2>저장한 기획</h2><div class="hint">콘텐츠 아이디어와 대본 메모</div><div class="cards" id="planCards"></div></div></section>
 <section class="view hidden" id="tasks"><div class="panel"><h2>일정 추가</h2><div class="hint">촬영, 편집, 업로드 일정을 등록해.</div><form id="tf"><div class="field"><label>일정 제목</label><input id="tt" required placeholder="예: 릴스 촬영"></div><div class="two"><div class="field"><label>날짜</label><input id="td" type="date" required></div><div class="field"><label>구분</label><select id="ty"><option>촬영</option><option>편집</option><option>업로드</option><option>회의</option><option>기타</option></select></div></div><div class="field"><label>담당자</label><select id="to"><option>공동</option><option>자이언트핑크</option><option>찬구</option></select></div><button class="primary">+ 일정 등록</button></form></div><div class="panel"><h2>작업 일정</h2><div class="hint">완료한 일정은 체크 표시</div><div id="taskRows"></div></div></section>
 <div class="foot">GINATPINK MANAGER CHANGU · VERSION 1.1 · SHARED WORKSPACE</div></div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-
 const SUPABASE_URL='https://amdshenbuodsfhdyabxv.supabase.co';
 const SUPABASE_KEY='sb_publishable_SoaVls8fumcP2JfK65zbRA_6sGh1DIT';
-if(!window.supabase||!window.supabase.createClient){document.getElementById('loginMessage').textContent='로그인 기능을 불러오지 못했어. 페이지를 새로고침하거나 다른 브라우저에서 열어줘.';document.getElementById('loginForm').addEventListener('submit',e=>e.preventDefault());throw new Error('Supabase JS library failed to load')}
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const SESSION_KEY='gpm_auth_session_v1';
 const KEY='ginatpink-changu-v1';
 const blank=()=>({refs:[],plans:[],tasks:[]});
-let db=(()=>{try{return JSON.parse(localStorage.getItem(KEY))||blank()}catch{return blank()}})();
-let currentUser=null,channel=null,saveTimer=null,remoteBusy=false;
 const el=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let db=(()=>{try{return JSON.parse(localStorage.getItem(KEY))||blank()}catch{return blank()}})();
+let session=null,currentUser=null,pollTimer=null,remoteBusy=false;
 function status(s){el('saveState').textContent=s}
+function showError(s){el('loginMessage').textContent=s;status('확인 필요')}
+function headers(token){return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+(token||SUPABASE_KEY),'Content-Type':'application/json'}}
+async function api(path,options={},token){
+ const response=await fetch(SUPABASE_URL+path,{...options,headers:{...headers(token),...(options.headers||{})}});
+ const raw=await response.text();let body={};try{body=raw?JSON.parse(raw):{}}catch{body={message:raw}}
+ if(!response.ok)throw new Error(body.msg||body.message||body.error_description||('요청 오류 '+response.status));
+ return body;
+}
+async function refreshSession(){
+ if(!session||!session.refresh_token)return false;
+ try{const d=await api('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})});
+ session={...d,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600)};localStorage.setItem(SESSION_KEY,JSON.stringify(session));return true
+ }catch(e){localStorage.removeItem(SESSION_KEY);session=null;return false}
+}
+async function validToken(){
+ if(!session)return null;
+ if(session.expires_at&&session.expires_at<Date.now()/1000+60){if(!await refreshSession())return null}
+ return session.access_token;
+}
 function empty(t){return '<div class="empty">'+t+'</div>'}
-function save(){localStorage.setItem(KEY,JSON.stringify(db));render();if(currentUser&&!remoteBusy){status('동기화 중…');clearTimeout(saveTimer);saveTimer=setTimeout(syncToCloud,350)}}
-async function syncToCloud(){if(!currentUser)return;const {error}=await supabase.from('app_state').upsert({user_id:currentUser.id,data:db,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(error){status('동기화 오류');console.error(error);el('loginMessage').textContent='클라우드 저장 오류: '+error.message}else status('공동 저장 완료')}
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(db));render();
+ if(currentUser&&!remoteBusy){status('클라우드 저장 중…');clearTimeout(window.gpmSaveTimer);window.gpmSaveTimer=setTimeout(syncToCloud,450)}
+}
+async function syncToCloud(){
+ const token=await validToken();if(!currentUser||!token)return;
+ try{await api('/rest/v1/app_state?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:currentUser.id,data:db,updated_at:new Date().toISOString()})},token);status('공동 저장 완료')}
+ catch(e){status('저장 실패');showError('클라우드 저장 오류: '+e.message)}
+}
+async function loadCloud(){
+ const token=await validToken();if(!token)throw new Error('로그인 세션이 만료됐어. 다시 로그인해 줘.');
+ const rows=await api('/rest/v1/app_state?select=data&user_id=eq.'+encodeURIComponent(currentUser.id),{},token);
+ if(rows&&rows.length&&rows[0].data){remoteBusy=true;db=rows[0].data;localStorage.setItem(KEY,JSON.stringify(db));render();remoteBusy=false}
+ else await syncToCloud();
+ status('공동 저장 연결됨');
+}
+async function pollCloud(){
+ if(!currentUser)return;
+ try{
+  const token=await validToken();if(!token)return;
+  const rows=await api('/rest/v1/app_state?select=data,updated_at&user_id=eq.'+encodeURIComponent(currentUser.id),{},token);
+  if(rows&&rows.length&&rows[0].data){const stamp=rows[0].updated_at||'';if(stamp!==window.gpmLastStamp){window.gpmLastStamp=stamp;remoteBusy=true;db=rows[0].data;localStorage.setItem(KEY,JSON.stringify(db));render();remoteBusy=false;status('공동 저장 완료')}}
+ }catch(e){status('동기화 확인 필요');console.error(e)}
+}
+function startPolling(){clearInterval(pollTimer);pollTimer=setInterval(pollCloud,4000)}
 function del(k,id){db[k]=db[k].filter(x=>x.id!==id);save()}
+function toggle(id){let x=db.tasks.find(x=>x.id===id);if(x)x.done=!x.done;save()}
 function render(){
  el('nRef').textContent=db.refs.length;el('nPlan').textContent=db.plans.length;el('nTask').textContent=db.tasks.filter(x=>!x.done).length;
- el('refCards').innerHTML=db.refs.length?db.refs.map(x=>'<article class="item"><span class="tag">'+esc(x.platform)+'</span><h3>'+esc(x.title)+'</h3><p>'+esc(x.note||'메모 없음')+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener">영상 열기 ↗</a><button onclick="del(\'refs\',\''+x.id+'\')">삭제</button></article>').join(''):empty('저장한 레퍼런스가 아직 없어.');
- el('planCards').innerHTML=db.plans.length?db.plans.map(x=>'<article class="item"><span class="tag">'+esc(x.kind)+' · '+esc(x.goal)+'</span><h3>'+esc(x.title)+'</h3><p><b>후킹</b> '+esc(x.hook)+'\n\n'+esc(x.script)+'</p><button onclick="del(\'plans\',\''+x.id+'\')">삭제</button></article>').join(''):empty('저장한 기획안이 아직 없어.');
+ el('refCards').innerHTML=db.refs.length?db.refs.map(x=>'<article class="item"><span class="tag">'+esc(x.platform)+'</span><h3>'+esc(x.title)+'</h3><p>'+esc(x.note||'메모 없음')+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener">영상 열기 ↗</a><button onclick="del(\\'refs\\',\\''+x.id+'\\')">삭제</button></article>').join(''):empty('저장한 레퍼런스가 아직 없어.');
+ el('planCards').innerHTML=db.plans.length?db.plans.map(x=>'<article class="item"><span class="tag">'+esc(x.kind)+' · '+esc(x.goal)+'</span><h3>'+esc(x.title)+'</h3><p><b>후킹</b> '+esc(x.hook)+'\\n\\n'+esc(x.script)+'</p><button onclick="del(\\'plans\\',\\''+x.id+'\\')">삭제</button></article>').join(''):empty('저장한 기획안이 아직 없어.');
  const sorted=[...db.tasks].sort((a,b)=>a.date.localeCompare(b.date));
- el('taskRows').innerHTML=sorted.length?sorted.map(x=>{let d=new Date(x.date+'T12:00:00');return '<div class="row"><input type="checkbox" '+(x.done?'checked':'')+' onchange="toggle(\''+x.id+'\')"><div class="date"><b>'+d.getDate()+'</b>'+['일','월','화','수','목','금','토'][d.getDay()]+'</div><div class="grow"><b style="'+(x.done?'text-decoration:line-through;color:#aaa':'')+'">'+esc(x.title)+'</b><small>'+esc(x.type)+' · '+esc(x.owner)+'</small></div><button onclick="del(\'tasks\',\''+x.id+'\')">삭제</button></div>'}).join(''):empty('등록된 일정이 아직 없어.');
+ el('taskRows').innerHTML=sorted.length?sorted.map(x=>{let d=new Date(x.date+'T12:00:00');return '<div class="row"><input type="checkbox" '+(x.done?'checked':'')+' onchange="toggle(\\''+x.id+'\\')"><div class="date"><b>'+d.getDate()+'</b>'+['일','월','화','수','목','금','토'][d.getDay()]+'</div><div class="grow"><b style="'+(x.done?'text-decoration:line-through;color:#aaa':'')+'">'+esc(x.title)+'</b><small>'+esc(x.type)+' · '+esc(x.owner)+'</small></div><button onclick="del(\\'tasks\\',\\''+x.id+'\\')">삭제</button></div>'}).join(''):empty('등록된 일정이 아직 없어.');
 }
-function toggle(id){let x=db.tasks.find(x=>x.id===id);if(x)x.done=!x.done;save()}
 el('rf').onsubmit=e=>{e.preventDefault();db.refs.unshift({id:crypto.randomUUID(),title:el('rt').value,platform:el('rp').value,url:el('ru').value,note:el('rn').value});e.target.reset();save()};
 el('pf').onsubmit=e=>{e.preventDefault();db.plans.unshift({id:crypto.randomUUID(),title:el('pt').value,kind:el('pk').value,goal:el('pg').value,hook:el('ph').value,script:el('ps').value});e.target.reset();save()};
 el('tf').onsubmit=e=>{e.preventDefault();db.tasks.push({id:crypto.randomUUID(),title:el('tt').value,date:el('td').value,type:el('ty').value,owner:el('to').value,done:false});e.target.reset();save()};
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('hidden',v.id!==b.dataset.view))});
 async function startWorkspace(user){
- currentUser=user;el('loginPanel').classList.add('hidden');el('appContent').classList.remove('hidden');el('logoutButton').classList.remove('hidden');el('loginMessage').textContent='로그인됨: '+user.email;status('불러오는 중…');
- const {data,error}=await supabase.from('app_state').select('data').eq('user_id',user.id).maybeSingle();
- if(error){status('DB 오류: '+error.message);el('loginMessage').textContent='데이터 불러오기 실패: '+error.message;return}
- if(data&&data.data){remoteBusy=true;db=data.data;localStorage.setItem(KEY,JSON.stringify(db));remoteBusy=false;render();status('공동 저장 연결됨')}
- else {render();await syncToCloud();status('공동 저장 연결됨')}
- if(channel)await supabase.removeChannel(channel);
- channel=supabase.channel('app-state-'+user.id).on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'user_id=eq.'+user.id},payload=>{
-   if(payload.new&&payload.new.data){remoteBusy=true;db=payload.new.data;localStorage.setItem(KEY,JSON.stringify(db));render();remoteBusy=false;status('다른 기기와 동기화됨')}
- }).subscribe();
+ currentUser=user;el('loginPanel').classList.add('hidden');el('appContent').classList.remove('hidden');el('logoutButton').classList.remove('hidden');status('데이터 불러오는 중…');showError('로그인됨: '+(user.email||'계정'));
+ try{await loadCloud();startPolling()}catch(e){showError('로그인은 됐지만 공동 데이터 연결 실패: '+e.message);status('연결 오류')}
 }
-el('loginForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter;btn.disabled=true;el('loginMessage').textContent='로그인 확인 중…';const {data,error}=await supabase.auth.signInWithPassword({email:el('loginEmail').value.trim(),password:el('loginPassword').value});btn.disabled=false;if(error){el('loginMessage').textContent='로그인 실패: '+error.message;return}await startWorkspace(data.user)};
-el('logoutButton').onclick=async()=>{if(channel){await supabase.removeChannel(channel);channel=null}await supabase.auth.signOut();currentUser=null;el('appContent').classList.add('hidden');el('loginPanel').classList.remove('hidden');el('logoutButton').classList.add('hidden');el('loginMessage').textContent='로그아웃했어.';status('로그인 필요')};
-(async()=>{const {data}=await supabase.auth.getSession();if(data.session)await startWorkspace(data.session.user);else render()})();
+el('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=e.submitter||el('loginForm').querySelector('button[type="submit"]');btn.disabled=true;showError('로그인 확인 중…');
+ try{
+  const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email:el('loginEmail').value.trim(),password:el('loginPassword').value})});
+  session={...d,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600)};localStorage.setItem(SESSION_KEY,JSON.stringify(session));await startWorkspace(d.user);
+ }catch(err){showError('로그인 실패: '+err.message)}
+ finally{btn.disabled=false}
+});
+el('logoutButton').onclick=async()=>{clearInterval(pollTimer);const token=await validToken();if(token){try{await api('/auth/v1/logout',{method:'POST'},token)}catch(e){}}session=null;currentUser=null;localStorage.removeItem(SESSION_KEY);el('appContent').classList.add('hidden');el('loginPanel').classList.remove('hidden');el('logoutButton').classList.add('hidden');showError('로그아웃했어.');status('로그인 필요')};
+(async()=>{
+ try{const saved=localStorage.getItem(SESSION_KEY);if(saved){session=JSON.parse(saved);const token=await validToken();if(token){const user=await api('/auth/v1/user',{},token);await startWorkspace(user);return}}}
+ catch(e){console.warn(e);localStorage.removeItem(SESSION_KEY);session=null}
+ render();
+})();
 </script></body></html>
