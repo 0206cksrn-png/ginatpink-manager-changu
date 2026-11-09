@@ -20,6 +20,27 @@ const el=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let db=(()=>{try{return JSON.parse(localStorage.getItem(KEY))||blank()}catch{return blank()}})();
 let session=null,currentUser=null,pollTimer=null,remoteBusy=false;
+el('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const btn=e.submitter||document.querySelector('#loginForm button[type="submit"]');
+ if(btn)btn.disabled=true;
+ document.getElementById('loginMessage').textContent='로그인 확인 중…';
+ try{
+  const email=document.getElementById('loginEmail').value.trim();
+  const password=document.getElementById('loginPassword').value;
+  const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
+  session={...d,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600)};
+  localStorage.setItem(SESSION_KEY,JSON.stringify(session));
+  await startWorkspace(d.user);
+ }catch(err){
+  document.getElementById('loginMessage').textContent='로그인 실패: '+(err&&err.message?err.message:String(err));
+  document.getElementById('saveState').textContent='확인 필요';
+ }finally{if(btn)btn.disabled=false}
+});
+window.addEventListener('error',e=>{
+ const msg=document.getElementById('loginMessage');
+ if(msg && !msg.textContent)msg.textContent='화면 스크립트 오류: '+(e.message||'확인할 수 없는 오류');
+});
 function status(s){el('saveState').textContent=s}
 function showError(s){el('loginMessage').textContent=s;status('확인 필요')}
 function headers(token){return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+(token||SUPABASE_KEY),'Content-Type':'application/json'}}
@@ -83,14 +104,7 @@ async function startWorkspace(user){
  currentUser=user;el('loginPanel').classList.add('hidden');el('appContent').classList.remove('hidden');el('logoutButton').classList.remove('hidden');status('데이터 불러오는 중…');showError('로그인됨: '+(user.email||'계정'));
  try{await loadCloud();startPolling()}catch(e){showError('로그인은 됐지만 공동 데이터 연결 실패: '+e.message);status('연결 오류')}
 }
-el('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();const btn=e.submitter||el('loginForm').querySelector('button[type="submit"]');btn.disabled=true;showError('로그인 확인 중…');
- try{
-  const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email:el('loginEmail').value.trim(),password:el('loginPassword').value})});
-  session={...d,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600)};localStorage.setItem(SESSION_KEY,JSON.stringify(session));await startWorkspace(d.user);
- }catch(err){showError('로그인 실패: '+err.message)}
- finally{btn.disabled=false}
-});
+
 el('logoutButton').onclick=async()=>{clearInterval(pollTimer);const token=await validToken();if(token){try{await api('/auth/v1/logout',{method:'POST'},token)}catch(e){}}session=null;currentUser=null;localStorage.removeItem(SESSION_KEY);el('appContent').classList.add('hidden');el('loginPanel').classList.remove('hidden');el('logoutButton').classList.add('hidden');showError('로그아웃했어.');status('로그인 필요')};
 (async()=>{
  try{const saved=localStorage.getItem(SESSION_KEY);if(saved){session=JSON.parse(saved);const token=await validToken();if(token){const user=await api('/auth/v1/user',{},token);await startWorkspace(user);return}}}
