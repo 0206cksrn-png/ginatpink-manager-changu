@@ -11,10 +11,12 @@
 <section class="view hidden" id="tasks"><div class="panel"><h2>일정 추가</h2><div class="hint">촬영, 편집, 업로드 일정을 등록해.</div><form id="tf"><div class="field"><label>일정 제목</label><input id="tt" required placeholder="예: 릴스 촬영"></div><div class="two"><div class="field"><label>날짜</label><input id="td" type="date" required></div><div class="field"><label>구분</label><select id="ty"><option>촬영</option><option>편집</option><option>업로드</option><option>회의</option><option>기타</option></select></div></div><div class="field"><label>담당자</label><select id="to"><option>공동</option><option>자이언트핑크</option><option>찬구</option></select></div><button class="primary">+ 일정 등록</button></form></div><div class="panel"><h2>작업 일정</h2><div class="hint">완료한 일정은 체크 표시</div><div id="taskRows"></div></div></section>
 <div class="foot">GINATPINK MANAGER CHANGU · VERSION 1.1 · SHARED WORKSPACE</div></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>if(!window.supabase){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\\/script>')}</script>
 <script>
 
 const SUPABASE_URL='https://amdshenbuodsfhdyabxv.supabase.co';
 const SUPABASE_KEY='sb_publishable_SoaVls8fumcP2JfK65zbRA_6sGh1DIT';
+if(!window.supabase||!window.supabase.createClient){document.getElementById('loginMessage').textContent='로그인 모듈을 불러오지 못했어. 인터넷 연결을 확인하고 새로고침해 줘.';throw new Error('Supabase JS library failed to load')}
 const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const KEY='ginatpink-changu-v1';
 const blank=()=>({refs:[],plans:[],tasks:[]});
@@ -42,7 +44,7 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelect
 async function startWorkspace(user){
  currentUser=user;el('loginPanel').classList.add('hidden');el('appContent').classList.remove('hidden');el('logoutButton').classList.remove('hidden');el('loginMessage').textContent='로그인됨: '+user.email;status('불러오는 중…');
  const {data,error}=await supabase.from('app_state').select('data').eq('user_id',user.id).maybeSingle();
- if(error){status('불러오기 오류');el('loginMessage').textContent='데이터 불러오기 실패: '+error.message;return}
+ if(error){status('DB 오류: '+error.message);el('loginMessage').textContent='데이터 불러오기 실패: '+error.message;return}
  if(data&&data.data){remoteBusy=true;db=data.data;localStorage.setItem(KEY,JSON.stringify(db));remoteBusy=false;render();status('공동 저장 연결됨')}
  else {render();await syncToCloud();status('공동 저장 연결됨')}
  if(channel)await supabase.removeChannel(channel);
