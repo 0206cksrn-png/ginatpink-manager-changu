@@ -39,10 +39,29 @@ button{background:#292821;color:var(--gold2);border-color:#4a4538}.primary{backg
 <section class="panel" id="loginPanel"><h2>공동 작업 로그인</h2><div class="hint">네 휴대폰과 자이언트핑크 휴대폰에서 같은 계정으로 로그인해.</div><form id="loginForm"><div class="field"><label>이메일</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="Supabase에 등록한 이메일"></div><div class="field"><label>비밀번호</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Supabase 계정 비밀번호"></div><button class="primary" type="submit">로그인</button></form><p id="loginMessage" class="hint" role="status"></p><button id="logoutButton" class="hidden" type="button">로그아웃</button></section>
 <div id="appContent" class="hidden"><section class="hero"><small>PLAN · CREATE · GROW</small><h1>콘텐츠의 시작부터<br>업로드까지 한곳에서.</h1><p>해외 숏폼 레퍼런스, 콘텐츠 기획, 촬영과 업로드 일정을 관리해.</p></section>
 <section class="stats"><div class="stat"><span>레퍼런스</span><strong id="nRef">0</strong></div><div class="stat"><span>기획안</span><strong id="nPlan">0</strong></div><div class="stat"><span>남은 일정</span><strong id="nTask">0</strong></div></section>
-<nav class="tabs"><button class="tab active" data-view="refs">레퍼런스</button><button class="tab" data-view="plans">콘텐츠 기획</button><button class="tab" data-view="campaign">다이어트 캠페인</button><button class="tab" data-view="tasks">촬영·업로드 일정</button></nav>
+<nav class="tabs"><button class="tab active" data-view="refs">레퍼런스</button><button class="tab" data-view="plans">콘텐츠 기획</button><button class="tab" data-view="groupbuys">공구 캘린더</button><button class="tab" data-view="campaign">다이어트 캠페인</button><button class="tab" data-view="tasks">촬영·업로드 일정</button></nav>
 <section class="view" id="refs"><div class="panel"><h2>레퍼런스 추가</h2><div class="hint">해외 릴스·쇼츠 링크와 후킹 포인트를 저장해.</div><form id="rf"><div class="field"><label>콘텐츠 제목</label><input id="rt" required placeholder="예: 일상 토크 중 제품 자연스럽게 노출"></div><div class="two"><div class="field"><label>지역</label><select id="rc"><option value="국내">국내</option><option value="해외">해외</option></select></div><div class="field"><label>플랫폼</label><select id="rp"><option>Instagram Reels</option><option>TikTok</option><option>YouTube Shorts</option><option>기타</option></select></div></div><div class="field"><label>영상 링크</label><input id="ru" type="url" required placeholder="인스타그램 릴스 원본 주소 붙여넣기"></div><div class="field"><label>후킹 / 참고할 점</label><textarea id="rn" placeholder="첫 3초, 말투, 웃음 포인트, 제품 노출 방식"></textarea></div><button class="primary">+ 레퍼런스 저장</button></form></div><div class="panel"><h2>저장한 레퍼런스</h2><div class="hint">저장한 아이디어 모아보기</div><div class="cards" id="refCards"></div></div></section>
 <section class="view hidden" id="plans"><div class="panel"><h2>콘텐츠 기획 추가</h2><div class="hint">광고 티보다 캐릭터·일상·유머가 살아 있는 콘텐츠 중심.</div><form id="pf"><div class="field"><label>기획 제목</label><input id="pt" required placeholder="예: 운동 가기 싫은 날 현실 토크"></div><div class="two"><div class="field"><label>형식</label><select id="pk"><option>상황극</option><option>일상 브이로그</option><option>토크 / 썰</option><option>챌린지</option><option>리뷰 / 사용기</option></select></div><div class="field"><label>목표</label><select id="pg"><option>구매 전환</option><option>조회수 / 도달</option><option>댓글 / 참여</option><option>브랜드 인지도</option></select></div></div><div class="field"><label>오프닝 후킹</label><textarea id="ph" placeholder="시청자가 멈춰서 보게 만들 첫 장면 또는 첫마디"></textarea></div><div class="field"><label>영상 흐름 / 대본 메모</label><textarea id="ps" placeholder="1. 첫 장면&#10;2. 상황과 공감&#10;3. 제품이 자연스럽게 등장&#10;4. 마무리"></textarea></div><button class="primary">+ 기획 저장</button></form></div><div class="panel"><h2>저장한 기획</h2><div class="hint">콘텐츠 아이디어와 대본 메모</div><div class="cards" id="planCards"></div></div></section>
 
+<section class="view hidden" id="groupbuys">
+ <div class="hero" style="margin-bottom:15px"><small>GROUP BUY TRACKER · LIVING</small><h1>놓치기 쉬운 공구 일정,<br>한눈에 확인하기.</h1><p>브랜드·셀러·오픈 기간을 정리하고, 가격과 구매 링크가 공개되면 업데이트하는 공구 모니터링 보드.</p></div>
+ <div class="panel"><h2>윗클 올인원 세정티슈</h2><div class="hint">다음 주 예정 공구 · 2026년 11월 19일(목) ~ 11월 22일(일)</div>
+  <article class="item">
+   <span class="tag">공구 예정 · 일정 확인됨</span>
+   <h3>윗클 다목적 세정 티슈 — 바이미룸</h3>
+   <p><b>공구 기간</b> 11.19(목) – 11.22(일)<br><b>제품</b> 윗클 다목적 세정 티슈<br><b>요청 제품과의 일치 여부</b> ‘올인원 세정티슈’와 같은 제품/구성인지는 셀러 공지에서 최종 확인 필요<br><b>공구 가격</b> 아직 공개 정보 확인 안 됨<br><b>구매 링크</b> 오픈 시 셀러 인스타그램 공지에서 확인</p>
+   <a href="https://momcalendar.com/g/%EC%9C%97%ED%81%B4.html" target="_blank" rel="noopener">윗클 공구 일정 출처 열기 ↗</a>
+  </article>
+ </div>
+ <div class="panel"><h2>추가로 포착된 윗클 일정</h2><div class="hint">다음 주 이후 일정도 함께 기록해 둠.</div>
+  <div class="row"><div class="date"><b>23</b>11월</div><div class="grow"><b>윗클 NEW 물걸레청소포 추가</b><small>데이맘테이블 · 11.23 – 11.25</small></div><span class="tag">예정</span></div>
+  <div class="row"><div class="date"><b>30</b>11월</div><div class="grow"><b>윗클 세정티슈 / 물걸레청소포 / 신제품</b><small>아빠는내편-여행편 등 · 11.30 – 12.03</small></div><span class="tag">예정</span></div>
+  <div class="row"><div class="date"><b>01</b>12월</div><div class="grow"><b>윗클 세정티슈 / 물걸레청소포 / 신제품</b><small>아빠는내편-여행편 · 12.01 – 12.03</small></div><span class="tag">예정</span></div>
+ </div>
+ <div class="panel"><h2>제품 정보 메모</h2><div class="hint">올인원 세정 청소 롤티슈 대용량 200매 제품이 유통되고 있으며, 오늘의집 기준 제품 소개/리뷰가 확인됨. 실제 공구 옵션·가격은 공구 셀러의 오픈 공지를 기준으로 갱신.</div>
+  <a href="https://ohou.se/store/category?affect_id=1418518&affect_type=+ProductNonSaleDetail&category_id=23250012" target="_blank" rel="noopener">오늘의집 윗클 제품 노출 확인 ↗</a>
+ </div>
+</section>
 <section class="view hidden" id="campaign">
  <div class="hero" style="margin-bottom:15px"><small>PRODUCT CAMPAIGN LAB · NEW</small><h1>제품보다 먼저,<br>자핑의 캐릭터를 보여준다.</h1><p>한약 다이어트 제품 캠페인을 위한 숏폼 기획실. 효능을 과장하지 않고 일상·토크·유머로 관심을 만드는 방향으로 설계해.</p></div>
  <div class="panel"><h2>캠페인 전략</h2><div class="hint">핵심 원칙: '시간당 칼로리 소모량 몇 배' 같은 수치 주장을 후킹이나 자막으로 사용하지 않는다. 제품의 법적 분류, 허가·신고사항, 인체적용시험 등 객관적 근거와 광고 가능 범위를 먼저 확인한다.</div>
