@@ -170,6 +170,19 @@ function seedStarterContent(){
   db.plans.unshift({id:'gpm-witcle-plan-202611',title:'윗클 올인원 세정티슈 공구 콘텐츠 | 자핑식 청소 현실 공감 숏폼',kind:'상황극',goal:'구매 전환',hook:'“청소할 때 세제 찾고 걸레 찾고… 아직도 이렇게 해?”',script:'[콘셉트] 자핑 특유의 솔직하고 과장된 리액션으로 집안 청소 귀찮음을 코믹하게 보여준 뒤, 윗클 올인원 세정티슈를 실제 청소 장면에 연결하는 공구 콘텐츠.\\n\\n[0–3초 / 후킹] 주방에 얼룩이 보이자 “아 진짜 이거 언제 닦아”라고 반응. 세제·걸레·키친타월을 찾다가 귀찮아하는 상황극.\\n[3–8초 / 문제 제시] 가스레인지 주변, 식탁, 싱크대 상판 등 실제 닦을 곳을 빠르게 컷 편집. “한 군데 닦으려는데 준비물이 왜 이렇게 많아?”\\n[8–15초 / 제품 사용] 윗클 세정티슈를 꺼내 제품 라벨과 매수를 보여주고, 사용 가능한 표면인지 표시사항을 확인한 뒤 실제로 닦는 장면을 근접 촬영.\\n[15–21초 / 사용감] 사용 전후를 같은 조명·각도에서 보여주고, 본인이 직접 확인한 사용감만 말하기. “나는 이런 데 한 장씩 꺼내 쓰니까 편하더라”처럼 개인 경험으로 표현.\\n[21–28초 / 공구 안내] 공구 기간, 옵션, 가격, 배송비, 사은품을 셀러가 확정한 최신 공지 그대로 자막에 표시. 과거 공구 가격을 이번 공구 가격으로 재사용하지 않기.\\n\\n[촬영 컷] ① 얼룩 클로즈업 ② 자핑 리액션 ③ 티슈 패키지/매수 ④ 실제 닦는 손 클로즈업 ⑤ 동일 구도 전후 ⑥ 공구 일정·구성 엔딩 카드.\\n[주의] “모든 오염 제거”, “무조건 안전”, “살균/항균” 등은 공식 시험자료·제품 표시사항 확인 전 사용 금지. 식품 접촉면, 전자제품, 코팅·민감 표면 등은 사용 가능 여부와 사용 후 처리 방법을 제품 안내에서 확인. 광고·협찬 표기 및 실제 공구 일정/가격을 게시 전 최종 확인.'});
   changed=true;
  }
+
+ const taskSeeds=[
+  {id:'gpm-task-witcle-202611',title:'윗클',date:'2026-11-17',type:'공구',owner:'공동',done:false},
+  {id:'gpm-task-lapis-202611',title:'라피스센시블레 안경 · 선글라스',date:'2026-11-23',type:'공구',owner:'공동',done:false},
+  {id:'gpm-task-simple-tremo-202611',title:'심플다이어트 락토페린 / 트레모캐리어',date:'2026-11-28',type:'공구',owner:'공동',done:false},
+  {id:'gpm-task-hot-gomtang-202612',title:'뜨거운 곰탕',date:'2026-12-01',type:'공구',owner:'공동',done:false}
+ ];
+ if(!Array.isArray(db.tasks))db.tasks=[];
+ const taskIds=new Set(db.tasks.map(x=>x.id));
+ const noInsurance=db.tasks.filter(x=>!/(건강보험|건강보험금)/.test(String(x.title||'')));
+ if(noInsurance.length!==db.tasks.length){db.tasks=noInsurance;changed=true}
+ const missingTasks=taskSeeds.filter(x=>!taskIds.has(x.id));
+ if(missingTasks.length){db.tasks.push(...missingTasks);changed=true}
  return changed;
 }
 async function loadCloud(){
