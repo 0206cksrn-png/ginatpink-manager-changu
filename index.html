@@ -57,7 +57,7 @@ button{background:#292821;color:var(--gold2);border-color:#4a4538}.primary{backg
   <div class="field"><label>허가·신고된 제품명 및 기능·효능 범위</label><textarea id="campaignApproval" placeholder="허가증·품목신고·제품 표시사항의 정확한 문구를 기록"></textarea></div>
   <div class="field"><label>근거자료 및 검토 담당자</label><textarea id="campaignEvidence" placeholder="인체적용시험·논문·시험 조건·검토한 전문가 및 날짜"></textarea></div>
   <div class="field"><label>광고 가능 여부 및 사전 심의 확인</label><select id="campaignAd"><option value="">확인 전</option><option>광고 가능 범위 확인 완료</option><option>전문가·법무 검토 필요</option><option>소비자 대상 광고 제한 또는 불가 확인</option></select></div>
-  <p class="hint">주의: '신진대사를 몇 배 높인다', '시간당 칼로리 소모량을 몇 배 올린다', '먹기만 하면 감량' 등은 입증·허가 범위가 확인되지 않으면 사용하지 않는다. 한약·의약품·처방 관련 제품은 소비자 대상 광고가 허용된다고 단정하지 않는다.</p>
+  <p class="hint">주의: '신진대사를 몇 배 높인다', '시간당 칼로리 소모량을 몇 배 올린다', '먹기만 하면 감량' 등은 입증·허가 범위가 확인되지 않으면 사용하지 않는다. 한약·의약품·처방 관련 제품은 소비자 대상 광고가 허용된다고 단정하지 않는다.</p><button type="button" class="primary" onclick="saveCampaignGate()">검토 정보 저장 · 공동 계정</button><p id="campaignSaved" class="hint" role="status"></p>
  </div>
  <div class="panel"><h2>촬영 전 체크리스트</h2>
   <div class="row"><input type="checkbox"><div class="grow"><b>제품의 법적 분류와 판매 주체 확인</b><small>의약품·조제 한약·건강기능식품·일반식품 구분</small></div></div>
@@ -168,7 +168,17 @@ async function pollCloud(){
 function startPolling(){clearInterval(pollTimer);pollTimer=setInterval(pollCloud,4000)}
 function del(k,id){db[k]=db[k].filter(x=>x.id!==id);save()}
 function toggle(id){let x=db.tasks.find(x=>x.id===id);if(x)x.done=!x.done;save()}
-function render(){
+function saveCampaignGate(){
+ db.campaign={classification:el('campaignClass').value,approval:el('campaignApproval').value,evidence:el('campaignEvidence').value,ad:el('campaignAd').value};
+ save();el('campaignSaved').textContent='검토 정보 저장 완료 · 같은 계정으로 로그인한 기기와 동기화돼.';
+}
+function render(){if(db.campaign){
+ if(el('campaignClass'))el('campaignClass').value=db.campaign.classification||'';
+ if(el('campaignApproval'))el('campaignApproval').value=db.campaign.approval||'';
+ if(el('campaignEvidence'))el('campaignEvidence').value=db.campaign.evidence||'';
+ if(el('campaignAd'))el('campaignAd').value=db.campaign.ad||'';
+}
+
  el('nRef').textContent=db.refs.length;el('nPlan').textContent=db.plans.length;el('nTask').textContent=db.tasks.filter(x=>!x.done).length;
  el('refCards').innerHTML=db.refs.length?db.refs.map(x=>{const u=String(x.url||'');let player='';try{const z=new URL(u);if(z.hostname.includes('instagram.com')){const m=z.pathname.match(/\/(?:reel|p|tv)\/([^/]+)/);if(m)player='<div class="videoBox"><iframe src="https://www.instagram.com/'+(z.pathname.includes('/p/')?'p':'reel')+'/'+m[1]+'/embed" loading="lazy" allowfullscreen></iframe></div>'}else if(z.hostname.includes('youtube.com')||z.hostname==='youtu.be'){let id=z.hostname==='youtu.be'?z.pathname.slice(1):z.searchParams.get('v');if(z.pathname.includes('/shorts/'))id=z.pathname.split('/shorts/')[1].split('/')[0];if(id)player='<div class="videoBox"><iframe src="https://www.youtube.com/embed/'+id+'" loading="lazy" allowfullscreen></iframe></div>'}else if(z.hostname.includes('tiktok.com')){const m=z.pathname.match(/\/video\/(\d+)/);if(m)player='<div class="videoBox"><iframe src="https://www.tiktok.com/player/v1/'+m[1]+'" loading="lazy" allowfullscreen></iframe></div>'}}catch(e){}return '<article class="item"><span class="tag">'+esc(x.region||'지역 미분류')+' · '+esc(x.platform)+'</span>'+player+'<h3>'+esc(x.title)+'</h3><p>'+esc(x.note||'메모 없음')+'</p><a href="'+esc(u)+'" target="_blank" rel="noopener">원본 영상 열기 ↗</a><button onclick="del(&quot;refs&quot;,&quot;'+esc(x.id)+'&quot;)">삭제</button></article>'}).join(''):empty('저장한 레퍼런스가 아직 없어.');
  el('planCards').innerHTML=db.plans.length?db.plans.map(x=>'<article class="item"><span class="tag">'+esc(x.kind)+' · '+esc(x.goal)+'</span><h3>'+esc(x.title)+'</h3><p><b>후킹</b> '+esc(x.hook)+'\n\n'+esc(x.script)+'</p><button onclick="del(&quot;plans&quot;,&quot;'+esc(x.id)+'&quot;)">삭제</button></article>').join(''):empty('저장한 기획안이 아직 없어.');
