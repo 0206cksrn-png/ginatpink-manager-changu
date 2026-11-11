@@ -131,20 +131,25 @@ async function syncToCloud(){
 }
 function seedStarterContent(){
  const refsBefore=Array.isArray(db.refs)?db.refs:[];
+ const oldSeedIds=new Set(['gpm-kr-jihyun-01','gpm-kr-sohee-02','gpm-kr-lesserafim-03','gpm-us-hannah-04','gpm-us-lexy-05','gpm-us-jeanine-06']);
  const badHosts=['sparkmedia.la','ads.tiktok.com','netinfluencer.com','modash.io'];
- const cleaned=refsBefore.filter(x=>{try{return !badHosts.some(h=>new URL(x.url).hostname.endsWith(h))}catch{return true}});
+ const cleaned=refsBefore.filter(x=>{
+  if(oldSeedIds.has(x.id)||String(x.id||'').startsWith('gpm-metab-'))return false;
+  try{return !badHosts.some(h=>new URL(x.url).hostname.endsWith(h))}catch{return true}
+ });
  const starter=[
-  {id:'gpm-kr-jihyun-01',title:'국내 | 아침 루틴 브이로그 — 운동과 집안일을 하루 이야기로',region:'국내',platform:'YouTube Shorts',url:'https://www.youtube.com/watch?v=fX3ERGJ6e6g',note:'데일리지현의 실제 모닝 루틴 쇼츠. 등교 후 혼자 보내는 시간, 청소와 운동을 일상 흐름으로 묶음. 가져올 포인트: 첫 장면에서 오늘의 루틴을 한 줄로 선언하고, 생활 장면을 빠르게 연결한 뒤 시청자에게 질문을 던지는 마무리.'},
-  {id:'gpm-kr-sohee-02',title:'국내 | 안소희의 건강 관리 데일리 브이로그',region:'국내',platform:'YouTube',url:'https://www.youtube.com/watch?v=-gQB_KEAMMg',note:'건강 루틴·가벼운 식사·필라테스·웰니스 제품 방문이 한 편의 일상 브이로그 안에 들어간 실제 영상. 제품 소개부터 시작하지 않고 본인의 하루와 관리 습관을 먼저 보여주는 방식이 핵심. 숏폼으로는 식사→운동→제품 사용 장면을 20~30초로 압축해 참고.'},
-  {id:'gpm-kr-lesserafim-03',title:'국내 | 카즈하 데일리 브이로그 — 일상과 운동 루틴',region:'국내',platform:'YouTube',url:'https://www.youtube.com/watch?v=U6vicy2HVAQ',note:'카즈하의 데일리 필기구 소개와 운동 루틴을 함께 담은 실제 브이로그. 가져올 포인트: 캐릭터가 드러나는 개인 소지품·취향 소개를 루틴 사이에 넣고, 운동 장면을 짧게 끊어 리듬을 만드는 방식.'},
-  {id:'gpm-us-hannah-04',title:'해외 | Hannah Elise — 평범한 하루를 따라가는 라이프 브이로그',region:'해외',platform:'YouTube',url:'https://www.youtube.com/watch?v=pt8jk-01MRg',note:'미국 라이프스타일 크리에이터의 실제 Day in My Life. 운동, 업무, 외출, 요리, 집안일, 카메라 토크를 섞어 친한 친구에게 하루를 공유하는 느낌으로 구성. 가져올 포인트: 완벽한 루틴보다 현실적인 일정과 짧은 토크를 섞어 광고 피로도를 낮추는 방식.'},
-  {id:'gpm-us-lexy-05',title:'해외 | Lexy Bae — 리셋 데이·셀프케어 루틴',region:'해외',platform:'YouTube',url:'https://www.youtube.com/watch?v=lDq7LZiAdEc',note:'실제 Reset Routine 영상. GRWM→셀프케어→청소→계획 세우기로 하루를 작은 챕터로 나눔. 가져올 포인트: 화면 자막으로 다음 장면을 예고하고, 제품은 셀프케어 과정 중 실제 사용하는 소품으로 등장시키는 구성.'},
-  {id:'gpm-us-jeanine-06',title:'해외 | Jeanine Escobar — 체형 관리 경험을 솔직하게 설명하는 토크',region:'해외',platform:'YouTube',url:'https://www.youtube.com/watch?v=8DogsnsgmIw',note:'미국 피트니스 크리에이터가 본인의 운동·식단 경험과 변화를 설명하는 실제 영상. 가져올 포인트: 과장된 전후 광고 대신 개인 경험→왜 바꿨는지→실제로 한 행동 순서로 말하기. 자이언트핑크 버전은 래퍼 특유의 직설적인 말투와 유머를 살린 30초 댓글 답변형으로 재구성.'}
+  {id:'gpm-metab-kr-01',title:'국내 | 기초대사량 높이는 방법 BEST 5 — 1분 쇼츠',region:'국내',platform:'YouTube Shorts',url:'https://www.youtube.com/watch?v=89BX90vCQk4',note:'짧은 리스트형 건강정보 영상. 참고 포인트: 첫 화면에서 궁금증을 만들고 숫자 5개로 정보를 쪼개는 구조. 자핑 버전은 “신진대사 올리는 비법?”처럼 단정하지 말고 “대사량 얘기할 때 많이 헷갈리는 3가지”처럼 정보형 후킹으로 재구성. 원본의 과학적 정확성은 별도 검증 필요.'},
+  {id:'gpm-metab-kr-02',title:'국내 | 일주어터 — 일주일 동안 마라탕만 먹어본 실험 브이로그',region:'국내',platform:'YouTube',url:'https://www.youtube.com/watch?v=riAEnn0aS6A',note:'일주일 실험 포맷의 실제 영상. 참고 포인트: 시작 전 기대·중간의 현실적인 고충·마지막 솔직한 소감으로 스토리를 만드는 방식. 따라 할 것은 실험의 서사 구조뿐이며, 한 가지 음식만 먹는 제한 식단은 재현하지 말 것.'},
+  {id:'gpm-metab-kr-03',title:'국내 | 일주어터 — 일주일 동안 죽만 먹어본 실험 브이로그',region:'국내',platform:'YouTube',url:'https://www.youtube.com/watch?v=iCdhWezVN5Y',note:'시청자가 익숙한 다이어트 실험을 크리에이터의 말투와 리액션으로 풀어낸 사례. 참고 포인트: 도전 선언→하루별 변화→예상 밖의 불편함→결론. 영상 설명에도 단기간 무리한 다이어트는 건강을 해친다고 명시되어 있으므로, 자핑 콘텐츠는 무리한 식단 챌린지가 아닌 지속 가능한 일상 루틴으로 전환.'},
+  {id:'gpm-metab-us-04',title:'해외 | Whats Up Dude — 신진대사와 하루 총에너지소비(TDEE) 설명',region:'해외',platform:'YouTube',url:'https://www.youtube.com/watch?v=ONKjt9PM97Y',note:'기초대사량(BMR), 비운동 활동(NEAT), 운동(EAT), 음식의 열효과(TEF)를 도식적으로 설명하는 교육형 영상. 참고 포인트: 복잡한 개념을 4개 항목으로 나누고 생활 예시를 붙이는 방식. 자핑 버전은 “운동할 때만 칼로리가 쓰이는 게 아니라고?” 같은 질문형 20초 토크로 만들기. 수치·비율은 개인차가 있어 그대로 인용하지 말 것.'},
+  {id:'gpm-metab-us-05',title:'해외 | Rachel Signori — 운동 외 일상 움직임(NEAT) 설명',region:'해외',platform:'TikTok',url:'https://www.tiktok.com/@rachelsignorifit/video/7395608135383761414',note:'카페·일상 장면과 TDEE 구성 그래픽을 결합한 실제 크리에이터 영상. 참고 포인트: 평범한 장소에서 질문형 자막으로 시작하고, 산책·계단·집안일처럼 바로 이해되는 행동 예시를 붙이는 방식. 자핑 버전은 작업실·육아·외출 동선 등 실제 하루 움직임을 보여주기.'},
+  {id:'gpm-metab-us-06',title:'해외 | Fraser R. Fit — 다이어트·운동 상식 3가지 팩트체크',region:'해외',platform:'TikTok',url:'https://www.tiktok.com/@fraserr.fit/video/7462495387669021226',note:'“FAKE NEWS”로 시작해 흔한 운동·다이어트 오해를 짧게 바로잡는 팩트체크형 영상. 참고 포인트: 통념 제시→짧은 반박→실천 가능한 대안. 자핑 버전은 “기초대사량 높인다는 말, 어디까지 맞을까?”처럼 과장 광고를 걸러주는 토크로 활용.'},
+  {id:'gpm-metab-us-07',title:'해외 | Alix Earle × BILT — GRWM 토크에 브랜드를 자연스럽게 통합',region:'해외',platform:'TikTok',url:'https://www.tiktok.com/@alixearle/video/7174619591514246446',note:'크리에이터의 GRWM·일상 토크 흐름에 브랜드가 들어간 실제 협업 영상. 참고 포인트: 제품 설명을 먼저 하지 않고 크리에이터가 원래 하던 이야기와 포맷을 유지하며 제품을 연결. 자핑에게는 “관리 루틴 하면서 수다 떠는 영상”으로 응용. 협업 사례의 성과 수치는 별도 분석 기사 기준이며 영상 자체의 현재 조회수로 단정하지 말 것.'}
  ];
- const badRemoved=cleaned.length!==refsBefore.length;
  const known=new Set(cleaned.map(x=>x.id));
  const missing=starter.filter(x=>!known.has(x.id)&&!cleaned.some(y=>y.url===x.url));
- if(!badRemoved && missing.length===0)return false;
+ const changed=cleaned.length!==refsBefore.length||missing.length>0;
+ if(!changed)return false;
  db.refs=[...missing,...cleaned];
  return true;
 }
