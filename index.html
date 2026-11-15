@@ -38,6 +38,7 @@ button{background:#292821;color:var(--gold2);border-color:#4a4538}.primary{backg
 <header><div class="brand"><div class="logo">G</div><div><small>CREATOR WORKSPACE</small><b>GINATPINK MANAGER CHANGU</b></div></div><span class="pill" id="saveState">로그인 필요</span></header>
 <section class="panel" id="loginPanel"><h2>공동 작업 로그인</h2><div class="hint">네 휴대폰과 자이언트핑크 휴대폰에서 같은 계정으로 로그인해.</div><form id="loginForm"><div class="field"><label>이메일</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="Supabase에 등록한 이메일"></div><div class="field"><label>비밀번호</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Supabase 계정 비밀번호"></div><button class="primary" type="submit">로그인</button></form><p id="loginMessage" class="hint" role="status"></p><button id="logoutButton" class="hidden" type="button">로그아웃</button></section>
 <div id="appContent" class="hidden"><section class="hero"><small>PLAN · CREATE · GROW</small><h1>콘텐츠의 시작부터<br>업로드까지 한곳에서.</h1><p>해외 숏폼 레퍼런스, 콘텐츠 기획, 촬영과 업로드 일정을 관리해.</p></section>
+<section class="panel" id="archiveSyncPanel"><h2>전체 자료 한 번에 반영</h2><div class="hint">지금까지 정리한 레퍼런스, 콘텐츠 기획, 다이어트·신진대사 캠페인, 공구 계정 분석, 윗클 기획과 공구 일정을 공동 계정에 다시 반영해. 기존 사용자가 직접 저장한 자료는 유지하고 중복 항목은 추가하지 않아.</div><button class="primary" id="syncAllButton" type="button">전체 자료 반영 · 공동 저장</button><p class="hint" id="syncAllStatus" role="status">로그인 후 실행할 수 있어.</p></section>
 <section class="stats"><div class="stat"><span>레퍼런스</span><strong id="nRef">0</strong></div><div class="stat"><span>기획안</span><strong id="nPlan">0</strong></div><div class="stat"><span>남은 일정</span><strong id="nTask">0</strong></div></section>
 <nav class="tabs"><button class="tab active" data-view="refs">레퍼런스</button><button class="tab" data-view="plans">콘텐츠 기획</button><button class="tab" data-view="campaign">다이어트 캠페인</button><button class="tab" data-view="tasks">촬영·업로드 일정</button></nav>
 <section class="view" id="refs"><div class="panel"><h2>레퍼런스 추가</h2><div class="hint">해외 릴스·쇼츠 링크와 후킹 포인트를 저장해.</div><form id="rf"><div class="field"><label>콘텐츠 제목</label><input id="rt" required placeholder="예: 일상 토크 중 제품 자연스럽게 노출"></div><div class="two"><div class="field"><label>지역</label><select id="rc"><option value="국내">국내</option><option value="해외">해외</option></select></div><div class="field"><label>플랫폼</label><select id="rp"><option>Instagram Reels</option><option>TikTok</option><option>YouTube Shorts</option><option>기타</option></select></div></div><div class="field"><label>영상 링크</label><input id="ru" type="url" required placeholder="인스타그램 릴스 원본 주소 붙여넣기"></div><div class="field"><label>후킹 / 참고할 점</label><textarea id="rn" placeholder="첫 3초, 말투, 웃음 포인트, 제품 노출 방식"></textarea></div><button class="primary">+ 레퍼런스 저장</button></form></div><div class="panel"><h2>저장한 레퍼런스</h2><div class="hint">저장한 아이디어 모아보기</div><div class="cards" id="refCards"></div></div></section>
@@ -67,7 +68,7 @@ button{background:#292821;color:var(--gold2);border-color:#4a4538}.primary{backg
  </div>
 </section>
 <section class="view hidden" id="tasks"><div class="panel"><h2>일정 추가</h2><div class="hint">촬영, 편집, 업로드 일정을 등록해.</div><form id="tf"><div class="field"><label>일정 제목</label><input id="tt" required placeholder="예: 릴스 촬영"></div><div class="two"><div class="field"><label>날짜</label><input id="td" type="date" required></div><div class="field"><label>구분</label><select id="ty"><option>촬영</option><option>편집</option><option>업로드</option><option>회의</option><option>기타</option></select></div></div><div class="field"><label>담당자</label><select id="to"><option>공동</option><option>자이언트핑크</option><option>찬구</option></select></div><button class="primary">+ 일정 등록</button></form></div><div class="panel"><h2>작업 일정</h2><div class="hint">완료한 일정은 체크 표시</div><div id="taskRows"></div></div></section>
-<div class="foot">GINATPINK MANAGER CHANGU · VERSION 1.1 · SHARED WORKSPACE</div></div></main>
+<div class="foot">GINATPINK MANAGER CHANGU · VERSION 1.2 · SHARED WORKSPACE</div></div></main>
 <script>
 const SUPABASE_URL='https://amdshenbuodsfhdyabxv.supabase.co';
 const SUPABASE_KEY='sb_publishable_SoaVls8fumcP2JfK65zbRA_6sGh1DIT';
@@ -126,8 +127,8 @@ function save(){
 }
 async function syncToCloud(){
  const token=await validToken();if(!currentUser||!token)return;
- try{await api('/rest/v1/app_state?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:currentUser.id,data:db,updated_at:new Date().toISOString()})},token);status('공동 저장 완료')}
- catch(e){status('저장 실패');showError('클라우드 저장 오류: '+e.message)}
+ try{await api('/rest/v1/app_state?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:currentUser.id,data:db,updated_at:new Date().toISOString()})},token);status('공동 저장 완료');return true}
+ catch(e){status('저장 실패');showError('클라우드 저장 오류: '+e.message);return false}
 }
 function seedStarterContent(){
  const refsBefore=Array.isArray(db.refs)?db.refs:[];
@@ -157,6 +158,13 @@ function seedStarterContent(){
   {id:'gpm-metab-plan-05',title:'관리 루틴 공개: 내가 매일 챙기는 것과 안 챙기는 것',kind:'일상 브이로그',goal:'브랜드 인지도',hook:'“관리한다고 모든 걸 빡세게 하진 않아.”',script:'0–3초: 외출 준비하며 오늘 루틴을 솔직하게 선언.\n3–9초: 물 챙기기, 식사 준비, 이동 중 걷기, 수면 준비 등 실제 습관을 짧은 컷으로 보여주기.\n9–15초: 잘 지키는 날과 놓치는 날을 함께 보여줘 과장된 완벽주의를 피하기.\n15–21초: 브랜드 제품은 본인이 실제로 쓰는 상황과 선택 이유를 말하고 제품 정보는 라벨에 맞춰 안내.\n21–25초: “너희가 꾸준히 하는 관리 하나는?” 질문으로 댓글 유도.\n제품이 신진대사를 높이거나 체중을 감량시킨다고 근거 없이 주장하지 않기.'}
  ];
  planStarter.push(...[{"id":"gpm-gonggu-plan-living-202611","title":"공구 레퍼런스 분석 | 살림·청소템 숏폼 전환 구조","kind":"리뷰 / 사용기","goal":"구매 전환","hook":"“이거 하나 바꿨는데 주방에서 매일 하는 일이 달라졌어요.”","script":"[참고 계정] 다다맘(@da_da__mom), 맘스테이블(@moms.table_), 보드레(@bodere81), 쑤기테이블(@ssugi_table), 길쭉이네(@eunjin_1225).\\n\\n[반복 패턴] ① 불편한 생활 장면을 먼저 보여줌 ② 제품을 실제 쓰는 손·공간 클로즈업 ③ 크기·소재·구성·세척/보관법 설명 ④ 전후 또는 기존 제품과 비교 ⑤ 공구 기간·옵션·배송·사은품을 명확히 제시.\\n\\n[자핑 버전] 자핑의 리액션과 생활 상황극으로 시작하고, 제품 기능 설명은 실제 시연에 붙인다. 청소/주방 제품은 사용 가능 표면·주의사항을 확인하고, 비포애프터는 같은 조명·각도에서 촬영. 공구 가격과 혜택은 최신 원문 공지 확인 후 자막에 넣기."},{"id":"gpm-gonggu-plan-food-202611","title":"공구 레퍼런스 분석 | 식품·간편식 구매전환 숏폼","kind":"일상 브이로그","goal":"구매 전환","hook":"“오늘 저녁 뭐 먹을지 고민 끝. 이 조합으로 차려볼게요.”","script":"[참고 계정] 명희홈쿡(@myunghee_homecook), 미라클식탁(@miracle_eunju119), 밥설공주(@bobseol), 에밀리엣홈(@emily.at_home), 에이핏(@__a.fit.__), 날씬쿡(@nalssin_cook).\\n\\n[반복 패턴] ① 완성 음식으로 시선 확보 ② 조리·해동·손질 과정을 짧게 편집 ③ 맛·식감·중량·원재료 등 구체 정보 ④ 실제 식탁/가족 식사 장면 ⑤ 묶음 구성·보관·배송·마감 안내.\\n\\n[자핑 버전] 한입 먹고 리액션하는 캐릭터성을 살리되, 맛 표현은 실제 시식 후 개인 경험으로 한정. 식품은 원산지·알레르기·중량·보관법·배송일을 확인하고 가격 비교는 동일 규격 기준으로 진행."},{"id":"gpm-gonggu-plan-beauty-202611","title":"공구 레퍼런스 분석 | 뷰티·웰니스 공구 콘텐츠","kind":"토크 / 썰","goal":"브랜드 인지도","hook":"“요즘 관리템 고를 때 나는 이 세 가지부터 봐.”","script":"[참고 계정] 데이나(@dana_danaspick), 라두나(@dunamandu), 도레미 홈트(@doremi_fit), 비비드유니(@vividyooni_).\\n\\n[반복 패턴] ① 크리에이터의 기존 루틴·관심사에서 출발 ② 제품 선택 이유와 사용 순서 소개 ③ 텍스처·사용감·패키지 등 시각적 디테일 ④ 할인/1+1/기간 한정 혜택 안내 ⑤ 상세 성분·주의사항은 구매 링크로 연결.\\n\\n[자핑 버전] 광고 멘트처럼 읽지 말고 자핑의 실제 루틴과 솔직한 반응으로 전개. 건강·체중·피부 개선 효능은 제품의 법적 분류, 표시·광고 가능 범위, 객관적 근거 확인 전 단정하지 않는다. 협찬·광고 표기 필수."},{"id":"gpm-gonggu-plan-analysis-202611","title":"공구 계정 벤치마킹 | 반복 구매를 만드는 운영 패턴","kind":"토크 / 썰","goal":"브랜드 인지도","hook":"“공구 잘하는 계정은 제품보다 먼저 이걸 보여주더라.”","script":"[분석 관찰] 여러 공구 계정에서 반복적으로 확인되는 운영 요소: ① 오픈 전 일정 예고와 알림 유도 ② 프로필 링크에 공구 일정·구매 링크를 모음 ③ 같은 카테고리의 연관 상품을 순차 편성 ④ 반복 차수·재구매 제품을 표시 ⑤ 사용 장면과 상세 정보 콘텐츠를 분리 ⑥ 마감 시점을 명확히 고지.\\n\\n[자핑 적용] 공구 전 티저 1편 → 사용/후기 1편 → 오픈 당일 옵션·가격 안내 1편 → 마감 전 FAQ 1편의 4단계 구성. 단, 일정·가격·재고·사은품은 셀러가 확정한 자료만 사용하고, 확인되지 않은 품절 임박·최저가 문구는 금지."}]);
+ planStarter.push(
+  {id:'gpm-initial-plan-rapper-day',title:'래퍼의 현실 하루 루틴',kind:'일상 브이로그',goal:'브랜드 인지도',hook:'“오늘 일정? 일단 나부터 정신없음.”',script:'자핑의 실제 하루를 이동·촬영 준비·식사·작업·휴식 순서로 짧게 기록한다. 완벽한 루틴을 연출하기보다 일정이 꼬이거나 예상 밖의 일이 생기는 순간을 살린다. 첫 2초는 가장 웃기거나 정신없는 장면을 먼저 보여주고, 이후 시간 순서로 빠르게 전개한다.'},
+  {id:'gpm-initial-plan-friend-check',title:'친구 관리 루틴 감시 상황극',kind:'상황극',goal:'조회수 / 도달',hook:'“관리한다는 친구 하루 종일 관찰해 봄.”',script:'자핑이 친구의 관리 루틴을 과하게 감시하는 1인 2역 상황극. 운동복만 입고 누워 있기, 물 마셨다고 간식 먹기, 내일부터 시작한다고 말하기 등 공감 가능한 행동을 짧은 컷으로 연결한다. 특정 체중·외모를 조롱하지 않고 행동의 모순을 웃음 포인트로 삼는다.'},
+  {id:'gpm-initial-plan-comment-reply',title:'팔로워 댓글에 자핑식으로 답하기',kind:'토크 / 썰',goal:'댓글 / 참여',hook:'“이 댓글은 그냥 못 지나가겠다.”',script:'실제 팔로워 댓글 하나를 화면에 띄우고 자핑이 즉흥적으로 답한다. 질문을 읽는 리액션으로 시작해 핵심 답변, 개인 경험과 일반 정보의 구분, 후속 질문 유도로 마무리한다. 건강·의학·제품 효능 질문은 확인된 정보만 답하고 모르는 내용은 전문가 확인이 필요하다고 분명히 말한다.'},
+  {id:'gpm-initial-plan-shopping-cart',title:'장바구니 공개: 살까 말까 고민한 것들',kind:'토크 / 썰',goal:'댓글 / 참여',hook:'“내 장바구니 털어볼게. 근데 이건 왜 담았지?”',script:'실제 장바구니에 담은 제품을 하나씩 보여주며 구매 이유와 망설이는 이유를 솔직하게 말한다. 제품별로 가격·구성·필요성을 구분하고, 협찬이나 광고가 있으면 명확히 표시한다. 아직 사용하지 않은 제품은 사용 후기처럼 말하지 않는다.'},
+  {id:'gpm-initial-plan-honest-review',title:'광고 멘트 없이 솔직한 사용기',kind:'리뷰 / 사용기',goal:'브랜드 인지도',hook:'“좋은 점만 말하면 리뷰가 아니지.”',script:'실제로 사용한 제품 하나를 정해 사용 전 기대, 실제 사용 장면, 마음에 든 점, 아쉬운 점 순서로 소개한다. 제품 설명은 제조사 표시사항과 일치시키고, 효능·안전성·성능을 과장하지 않는다. 제품을 쓰지 않은 경우에는 구매 전 체크 포인트 콘텐츠로 전환한다.'}
+ );
  const knownPlanIds=new Set((Array.isArray(db.plans)?db.plans:[]).map(x=>x.id));
  const missingPlans=planStarter.filter(x=>!knownPlanIds.has(x.id));
  let changed=cleaned.length!==refsBefore.length||missing.length>0||missingPlans.length>0;
@@ -205,6 +213,18 @@ async function pollCloud(){
 function startPolling(){clearInterval(pollTimer);pollTimer=setInterval(pollCloud,4000)}
 function del(k,id){db[k]=db[k].filter(x=>x.id!==id);save()}
 function toggle(id){let x=db.tasks.find(x=>x.id===id);if(x)x.done=!x.done;save()}
+async function syncAllKnownContent(){
+ const button=el('syncAllButton'),label=el('syncAllStatus');
+ if(!currentUser){label.textContent='먼저 공동 작업 계정으로 로그인해 줘.';return}
+ button.disabled=true;label.textContent='기존 자료 확인 및 반영 중…';
+ try{
+  const changed=seedStarterContent();
+  localStorage.setItem(KEY,JSON.stringify(db));render();
+  const ok=await syncToCloud();
+  label.textContent=ok?'반영 완료: 레퍼런스 '+db.refs.length+'개 · 기획안 '+db.plans.length+'개 · 일정 '+db.tasks.length+'개를 공동 저장했어.': '로컬 반영은 됐지만 클라우드 저장에 실패했어. 로그인 세션과 연결 상태를 확인해 줘.';
+ }catch(e){label.textContent='반영 실패: '+e.message}
+ finally{button.disabled=false}
+}
 function saveCampaignGate(){
  db.campaign={classification:el('campaignClass').value,approval:el('campaignApproval').value,evidence:el('campaignEvidence').value,ad:el('campaignAd').value};
  save();el('campaignSaved').textContent='검토 정보 저장 완료 · 같은 계정으로 로그인한 기기와 동기화돼.';
@@ -231,6 +251,7 @@ async function startWorkspace(user){
  try{await loadCloud();startPolling()}catch(e){showError('로그인은 됐지만 공동 데이터 연결 실패: '+e.message);status('연결 오류')}
 }
 
+el('syncAllButton').onclick=syncAllKnownContent;
 el('logoutButton').onclick=async()=>{clearInterval(pollTimer);const token=await validToken();if(token){try{await api('/auth/v1/logout',{method:'POST'},token)}catch(e){}}session=null;currentUser=null;localStorage.removeItem(SESSION_KEY);el('appContent').classList.add('hidden');el('loginPanel').classList.remove('hidden');el('logoutButton').classList.add('hidden');showError('로그아웃했어.');status('로그인 필요')};
 (async()=>{
  try{const saved=localStorage.getItem(SESSION_KEY);if(saved){session=JSON.parse(saved);const token=await validToken();if(token){const user=await api('/auth/v1/user',{},token);await startWorkspace(user);return}}}
