@@ -206,8 +206,8 @@ function seedStarterContent(){
  const plansAfter=Array.isArray(db.plans)?db.plans:[];
  const tasksAfter=Array.isArray(db.tasks)?db.tasks:[];
  const refsFiltered=refsAfter.filter(x=>!isWitcleRecord(x)&&isSafeUrl(x.url));
- const plansFiltered=plansAfter.filter(x=>!/witcle|윗클/i.test(JSON.stringify(x||{})));
- const tasksFiltered=tasksAfter.filter(x=>!/witcle|윗클/i.test(JSON.stringify(x||{})));
+ const plansFiltered=plansAfter.filter(x=>!/witcle|윗클|세정티슈/i.test(JSON.stringify(x||{})));
+ const tasksFiltered=tasksAfter.filter(x=>!/witcle|윗클|세정티슈/i.test(JSON.stringify(x||{})));
  if(refsFiltered.length!==refsAfter.length){db.refs=refsFiltered;changed=true}
  if(plansFiltered.length!==plansAfter.length){db.plans=plansFiltered;changed=true}
  if(tasksFiltered.length!==tasksAfter.length){db.tasks=tasksFiltered;changed=true}
