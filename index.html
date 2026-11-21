@@ -37,10 +37,10 @@ button{background:#292821;color:var(--gold2);border-color:#4a4538}.primary{backg
 </style></head><body><main class="wrap">
 <header><div class="brand"><div class="logo">G</div><div><small>CREATOR WORKSPACE</small><b>GINATPINK MANAGER CHANGU</b></div></div><span class="pill" id="saveState">로그인 필요</span></header>
 <section class="panel" id="loginPanel"><h2>공동 작업 로그인</h2><div class="hint">네 휴대폰과 자이언트핑크 휴대폰에서 같은 계정으로 로그인해.</div><form id="loginForm"><div class="field"><label>이메일</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="Supabase에 등록한 이메일"></div><div class="field"><label>비밀번호</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Supabase 계정 비밀번호"></div><button class="primary" type="submit">로그인</button></form><p id="loginMessage" class="hint" role="status"></p><button id="logoutButton" class="hidden" type="button">로그아웃</button></section>
-<div id="appContent" class="hidden"><section class="hero"><small>PLAN · CREATE · GROW</small><h1>콘텐츠의 시작부터<br>업로드까지 한곳에서.</h1><p>해외 숏폼 레퍼런스, 콘텐츠 기획, 촬영과 업로드 일정을 관리해.</p></section>
-<section class="panel" id="archiveSyncPanel"><h2>전체 자료 한 번에 반영</h2><div class="hint">지금까지 정리한 레퍼런스, 콘텐츠 기획, 다이어트·신진대사 캠페인, 공구 계정 분석, 윗클 기획과 공구 일정을 공동 계정에 다시 반영해. 기존 사용자가 직접 저장한 자료는 유지하고 중복 항목은 추가하지 않아.</div><button class="primary" id="syncAllButton" type="button">전체 자료 반영 · 공동 저장</button><p class="hint" id="syncAllStatus" role="status">로그인 후 실행할 수 있어.</p></section>
+<div id="appContent" class="hidden"><section class="hero"><small>PLAN · CREATE · GROW</small><h1>골드 리치 크림 랩핑 마스크팩<br>콘텐츠 중심으로.</h1><p>녹티 골드 리치 크림 랩핑 마스크팩 공구 콘텐츠를 메인으로, 다이어트·생활 콘텐츠는 보조로 관리해.</p></section>
+<section class="panel" id="archiveSyncPanel"><h2>전체 자료 한 번에 반영</h2><div class="hint">기존 레퍼런스·기획안을 유지하며 녹티 골드 리치 크림 랩핑 마스크팩 중심 자료와 다이어트 보조 콘텐츠를 반영해. 윗클 관련 레퍼런스·기획·일정은 자동 정리하고 URL 중복 등록을 막아.</div><button class="primary" id="syncAllButton" type="button">전체 자료 반영 · 공동 저장</button><p class="hint" id="syncAllStatus" role="status">로그인 후 실행할 수 있어.</p></section>
 <section class="stats"><div class="stat"><span>레퍼런스</span><strong id="nRef">0</strong></div><div class="stat"><span>기획안</span><strong id="nPlan">0</strong></div><div class="stat"><span>남은 일정</span><strong id="nTask">0</strong></div></section>
-<nav class="tabs"><button class="tab active" data-view="refs">레퍼런스</button><button class="tab" data-view="plans">콘텐츠 기획</button><button class="tab" data-view="campaign">다이어트 캠페인</button><button class="tab" data-view="tasks">촬영·업로드 일정</button></nav>
+<nav class="tabs"><button class="tab active" data-view="refs">레퍼런스</button><button class="tab" data-view="plans">콘텐츠 기획</button><button class="tab" data-view="campaign">다이어트 보조 콘텐츠</button><button class="tab" data-view="tasks">촬영·업로드 일정</button></nav>
 <section class="view" id="refs"><div class="panel"><h2>레퍼런스 추가</h2><div class="hint">해외 릴스·쇼츠 링크와 후킹 포인트를 저장해.</div><form id="rf"><div class="field"><label>콘텐츠 제목</label><input id="rt" required placeholder="예: 일상 토크 중 제품 자연스럽게 노출"></div><div class="two"><div class="field"><label>지역</label><select id="rc"><option value="국내">국내</option><option value="해외">해외</option></select></div><div class="field"><label>플랫폼</label><select id="rp"><option>Instagram Reels</option><option>TikTok</option><option>YouTube Shorts</option><option>기타</option></select></div></div><div class="field"><label>영상 링크</label><input id="ru" type="url" required placeholder="인스타그램 릴스 원본 주소 붙여넣기"></div><div class="field"><label>후킹 / 참고할 점</label><textarea id="rn" placeholder="첫 3초, 말투, 웃음 포인트, 제품 노출 방식"></textarea></div><button class="primary">+ 레퍼런스 저장</button></form></div><div class="panel"><h2>저장한 레퍼런스</h2><div class="hint">저장한 아이디어 모아보기</div><div class="cards" id="refCards"></div></div></section>
 <section class="view hidden" id="plans"><div class="panel"><h2>콘텐츠 기획 추가</h2><div class="hint">광고 티보다 캐릭터·일상·유머가 살아 있는 콘텐츠 중심.</div><form id="pf"><div class="field"><label>기획 제목</label><input id="pt" required placeholder="예: 운동 가기 싫은 날 현실 토크"></div><div class="two"><div class="field"><label>형식</label><select id="pk"><option>상황극</option><option>일상 브이로그</option><option>토크 / 썰</option><option>챌린지</option><option>리뷰 / 사용기</option></select></div><div class="field"><label>목표</label><select id="pg"><option>구매 전환</option><option>조회수 / 도달</option><option>댓글 / 참여</option><option>브랜드 인지도</option></select></div></div><div class="field"><label>오프닝 후킹</label><textarea id="ph" placeholder="시청자가 멈춰서 보게 만들 첫 장면 또는 첫마디"></textarea></div><div class="field"><label>영상 흐름 / 대본 메모</label><textarea id="ps" placeholder="1. 첫 장면&#10;2. 상황과 공감&#10;3. 제품이 자연스럽게 등장&#10;4. 마무리"></textarea></div><button class="primary">+ 기획 저장</button></form></div><div class="panel"><h2>저장한 기획</h2><div class="hint">콘텐츠 아이디어와 대본 메모</div><div class="cards" id="planCards"></div></div></section>
 
@@ -132,12 +132,9 @@ async function syncToCloud(){
 }
 function seedStarterContent(){
  const refsBefore=Array.isArray(db.refs)?db.refs:[];
- const oldSeedIds=new Set(['gpm-kr-jihyun-01','gpm-kr-sohee-02','gpm-kr-lesserafim-03','gpm-us-hannah-04','gpm-us-lexy-05','gpm-us-jeanine-06','gpm-daily-20261117-general-int-01']);
- const badHosts=['sparkmedia.la','ads.tiktok.com','netinfluencer.com','modash.io'];
- const cleaned=refsBefore.filter(x=>{
-  if(oldSeedIds.has(x.id)||String(x.id||'').startsWith('gpm-metab-'))return false;
-  try{return !badHosts.some(h=>new URL(x.url).hostname.endsWith(h))}catch{return true}
- });
+ const isWitcleRecord=x=>/witcle|윗클|세정티슈/i.test(String((x&&x.id)||'')+' '+String((x&&x.title)||'')+' '+String((x&&x.note)||''));
+ const isSafeUrl=u=>{try{const z=new URL(String(u||''));return z.protocol==='https:'||z.protocol==='http:'}catch{return false}};
+ const cleaned=refsBefore.filter(x=>!isWitcleRecord(x)&&isSafeUrl(x.url));
  const starter=[
   {id:'gpm-metab-kr-01',title:'국내 | 기초대사량 높이는 방법 BEST 5 — 1분 쇼츠',region:'국내',platform:'YouTube Shorts',url:'https://www.youtube.com/watch?v=89BX90vCQk4',note:'짧은 리스트형 건강정보 영상. 참고 포인트: 첫 화면에서 궁금증을 만들고 숫자 5개로 정보를 쪼개는 구조. 자핑 버전은 “신진대사 올리는 비법?”처럼 단정하지 말고 “대사량 얘기할 때 많이 헷갈리는 3가지”처럼 정보형 후킹으로 재구성. 원본의 과학적 정확성은 별도 검증 필요.'},
   {id:'gpm-metab-kr-02',title:'국내 | 일주어터 — 일주일 동안 마라탕만 먹어본 실험 브이로그',region:'국내',platform:'YouTube',url:'https://www.youtube.com/watch?v=riAEnn0aS6A',note:'일주일 실험 포맷의 실제 영상. 참고 포인트: 시작 전 기대·중간의 현실적인 고충·마지막 솔직한 소감으로 스토리를 만드는 방식. 따라 할 것은 실험의 서사 구조뿐이며, 한 가지 음식만 먹는 제한 식단은 재현하지 말 것.'},
@@ -215,11 +212,11 @@ function seedStarterContent(){
   {id:'gpm-nocti-blog-search-20261120',title:'네이버 블로그 후기 탐색 | 녹티 골드 리치 크림 마스크팩 검색',region:'국내',platform:'Naver Blog 검색',url:'https://search.naver.com/search.naver?query=%EB%85%B9%ED%8B%B0%20%EA%B3%A8%EB%93%9C%20%EB%A6%AC%EC%B9%98%20%EB%A7%88%EC%8A%A4%ED%81%AC%ED%8C%A9%20%EB%82%B4%EB%8F%88%EB%82%B4%EC%82%B0',note:'Naver Blog 개별 게시물 접근이 검색 환경에서 robots 차단되어 검증 가능한 개별 블로그 원문을 확보하지 못함. 이 링크는 네이버 블로그 검색 결과로 이동하는 검색 링크이며, 개별 내돈내산 게시물로 분류하지 않음. 이후 개별 게시물의 실제 URL, 광고/체험단 여부, 사용 기간, 작성일을 확인한 경우에만 정식 레퍼런스로 추가.'}
  );
  // Merge references added late in starter.push(), including the NOCTI mask.
+ starter.splice(0,starter.length,...starter.filter(x=>!isWitcleRecord(x)&&isSafeUrl(x.url)));
  const existingRefIds=new Set((Array.isArray(db.refs)?db.refs:[]).map(x=>x.id));
- const lateMissingRefs=starter.filter(x=>!existingRefIds.has(x.id));
+ const lateMissingRefs=starter.filter(x=>!existingRefIds.has(x.id)&&!db.refs.some(y=>String(y.url||'')===String(x.url||'')));
  if(lateMissingRefs.length){db.refs=[...lateMissingRefs,...(Array.isArray(db.refs)?db.refs:[])];changed=true}
  const taskSeeds=[
-  {id:'gpm-task-witcle-202611',title:'윗클',date:'2026-11-17',type:'공구',owner:'공동',done:false},
   {id:'gpm-task-lapis-202611',title:'라피스센시블레 안경 · 선글라스',date:'2026-11-23',type:'공구',owner:'공동',done:false},
   {id:'gpm-task-simple-tremo-202611',title:'심플다이어트 락토페린 / 트레모캐리어',date:'2026-11-28',type:'공구',owner:'공동',done:false},
   {id:'gpm-task-hot-gomtang-202612',title:'뜨거운 곰탕',date:'2026-12-01',type:'공구',owner:'공동',done:false}
@@ -230,6 +227,15 @@ function seedStarterContent(){
  if(noInsurance.length!==db.tasks.length){db.tasks=noInsurance;changed=true}
  const missingTasks=taskSeeds.filter(x=>!taskIds.has(x.id));
  if(missingTasks.length){db.tasks.push(...missingTasks);changed=true}
+ const refsAfter=Array.isArray(db.refs)?db.refs:[];
+ const plansAfter=Array.isArray(db.plans)?db.plans:[];
+ const tasksAfter=Array.isArray(db.tasks)?db.tasks:[];
+ const refsFiltered=refsAfter.filter(x=>!isWitcleRecord(x)&&isSafeUrl(x.url));
+ const plansFiltered=plansAfter.filter(x=>!/witcle|윗클/i.test(String((x&&x.id)||'')+' '+String((x&&x.title)||'')+' '+String((x&&x.script)||'')));
+ const tasksFiltered=tasksAfter.filter(x=>!/witcle|윗클/i.test(String((x&&x.id)||'')+' '+String((x&&x.title)||'')));
+ if(refsFiltered.length!==refsAfter.length){db.refs=refsFiltered;changed=true}
+ if(plansFiltered.length!==plansAfter.length){db.plans=plansFiltered;changed=true}
+ if(tasksFiltered.length!==tasksAfter.length){db.tasks=tasksFiltered;changed=true}
  return changed;
 }
 async function loadCloud(){
