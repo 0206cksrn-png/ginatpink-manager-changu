@@ -30,7 +30,7 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 <div id="appContent" class="hidden"><section class="hero"><small>PLAN · CREATE · GROW</small><h1>골드 리치 크림 랩핑 마스크팩<br>콘텐츠 중심으로.</h1><p>녹티 골드 리치 크림 랩핑 마스크팩 공구 콘텐츠를 메인으로, 다이어트·생활 콘텐츠는 보조로 관리해.</p></section>
 <section class="panel" id="archiveSyncPanel"><h2>전체 자료 한 번에 반영</h2><div class="hint">기존 자료를 보존하며 녹티 골드 리치 크림 랩핑 마스크 중심 자료와 다이어트 보조 콘텐츠를 반영해. 완료된 공구 자료는 정리하고 URL 중복 등록을 막아.</div><button class="primary" id="syncAllButton" type="button">전체 자료 반영 · 공동 저장</button><p class="hint" id="syncAllStatus" role="status">로그인 후 실행할 수 있어.</p></section>
 <section class="stats"><div class="stat"><span>레퍼런스</span><strong id="nRef">0</strong></div><div class="stat"><span>기획안</span><strong id="nPlan">0</strong></div><div class="stat"><span>남은 일정</span><strong id="nTask">0</strong></div></section>
-<nav class="tabs"><button class="tab active" data-view="refs">레퍼런스</button><button class="tab" data-view="plans">콘텐츠 기획</button><button class="tab" data-view="campaign">다이어트 보조 콘텐츠</button><button class="tab" data-view="ingredients">제품 효능 및 성분</button><button class="tab" data-view="tasks">촬영·업로드 일정</button></nav>
+<nav class="tabs"><button class="tab active" data-view="refs">레퍼런스</button><button class="tab" data-view="plans">콘텐츠 기획</button><button class="tab" data-view="campaign">다이어트 보조 콘텐츠</button><button class="tab" data-view="ingredients">제품 효능 및 성분</button><button class="tab" data-view="jungilyoung">정일영</button><button class="tab" data-view="tasks">촬영·업로드 일정</button></nav>
 <section class="view" id="refs"><div class="panel"><h2>레퍼런스 추가</h2><div class="hint">해외 릴스·쇼츠 링크와 후킹 포인트를 저장해.</div><form id="rf"><div class="field"><label>콘텐츠 제목</label><input id="rt" required placeholder="예: 일상 토크 중 제품 자연스럽게 노출"></div><div class="two"><div class="field"><label>지역</label><select id="rc"><option value="국내">국내</option><option value="해외">해외</option></select></div><div class="field"><label>플랫폼</label><select id="rp"><option>Instagram Reels</option><option>TikTok</option><option>YouTube Shorts</option><option>기타</option></select></div></div><div class="field"><label>영상 링크</label><input id="ru" type="url" required placeholder="인스타그램 릴스 원본 주소 붙여넣기"></div><div class="field"><label>후킹 / 참고할 점</label><textarea id="rn" placeholder="첫 3초, 말투, 웃음 포인트, 제품 노출 방식"></textarea></div><button class="primary">+ 레퍼런스 저장</button></form></div><div class="panel"><h2>저장한 레퍼런스</h2><div class="hint">저장한 아이디어 모아보기</div><div class="cards" id="refCards"></div></div></section>
 <section class="view hidden" id="plans"><div class="panel"><h2>콘텐츠 기획 추가</h2><div class="hint">광고 티보다 캐릭터·일상·유머가 살아 있는 콘텐츠 중심.</div><form id="pf"><div class="field"><label>기획 제목</label><input id="pt" required placeholder="예: 운동 가기 싫은 날 현실 토크"></div><div class="two"><div class="field"><label>형식</label><select id="pk"><option>상황극</option><option>일상 브이로그</option><option>토크 / 썰</option><option>챌린지</option><option>리뷰 / 사용기</option></select></div><div class="field"><label>목표</label><select id="pg"><option>구매 전환</option><option>조회수 / 도달</option><option>댓글 / 참여</option><option>브랜드 인지도</option></select></div></div><div class="field"><label>오프닝 후킹</label><textarea id="ph" placeholder="시청자가 멈춰서 보게 만들 첫 장면 또는 첫마디"></textarea></div><div class="field"><label>영상 흐름 / 대본 메모</label><textarea id="ps" placeholder="1. 첫 장면&#10;2. 상황과 공감&#10;3. 제품이 자연스럽게 등장&#10;4. 마무리"></textarea></div><button class="primary">+ 기획 저장</button></form></div><div class="panel"><h2>저장한 기획</h2><div class="hint">콘텐츠 아이디어와 대본 메모</div><div class="cards" id="planCards"></div></div></section>
 
@@ -64,6 +64,67 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 <article class="item"><span class="tag">WRINKLE CARE</span><h3>아데노신</h3><p>주름 개선 기능성 케어</p><p>국내 화장품 주름 개선 기능성 성분으로 사용되는 성분. 제품의 기능성 표시 범위에 맞춰 설명해.</p></article>
 <article class="item"><span class="tag">PREMIUM FORMULA</span><h3>금 · 백금 · 진주</h3><p>프리미엄 성분 포뮬러</p><p>금, 백금 콜로이드, 진주가루를 포함한 고급스러운 성분 구성. 원료 함유 자체만으로 특별한 피부 개선 효과를 단정하지 않아.</p></article>
 </div></div></section>
+
+<section class="view hidden" id="jungilyoung">
+ <div class="hero"><small>GUEST RESEARCH · BIGBANG COVER</small><h1>정일영 인물·밈 아카이브</h1><p>자이언트핑크의 빅뱅 커버 개사를 위한 인물 조사실. 확인된 사실, 실제 발언·밈, 영상 레퍼런스, 개사 아이디어를 구분해 정리.</p></div>
+ <div class="stats">
+  <div class="stat"><span>공식 채널 구독자 공개 추정치</span><strong>약 30.6만</strong></div>
+  <div class="stat"><span>채널 누적 조회수</span><strong>약 1.06억</strong></div>
+  <div class="stat"><span>공식 채널 영상 수</span><strong>225편</strong></div>
+ </div>
+ <div class="panel"><h2>한눈에 보는 정일영</h2><div class="hint">2026년 11월 23일 기준. 채널 통계는 외부 집계 서비스의 공개 데이터로, 유튜브 공식 실시간 수치와 차이가 있을 수 있음.</div>
+  <div class="cards">
+   <article class="item"><span class="tag">IDENTITY</span><h3>프랑스어 강사 · 언어학 박사</h3><p>인하대학교 불어불문학과 졸업 후 프랑스 파리 제8대학교 대학원에서 언어학 석·박사 과정을 밟았고, 귀국 후 인하대학교 프랑스언어문화학과에서 강의한 이력이 보도됨.</p></article>
+   <article class="item"><span class="tag">CHARACTER</span><h3>극내성인인데 말은 거침없음</h3><p>본인을 ‘극내성인’이라고 소개하는 캐릭터. 화가 많고 직설적인 말투를 보이면서도 일상에서는 사소한 부탁을 어려워하는 반전이 대표 웃음 포인트로 소개됨.</p></article>
+   <article class="item"><span class="tag">NICKNAMES</span><h3>코리안 트레버 · 파리 민수</h3><p>‘코리안 트레버’는 GTA의 괴팍하고 예측 불가한 캐릭터를 빗댄 별칭. ‘파리 민수’는 프랑스·파리 경험과 독특한 캐릭터를 묶은 온라인 별칭으로 쓰임.</p></article>
+   <article class="item"><span class="tag">CAREER TURN</span><h3>65세 연예인 데뷔 도전</h3><p>정년 퇴임을 앞둔 시점에 방송인·연예인이라는 새로운 목표에 도전하는 MBC 웹예능의 주인공. 젊은 아이돌 연습생 문법을 60대 교수가 수행하는 세대 차이가 콘텐츠의 핵심 장치.</p></article>
+  </div>
+ </div>
+ <div class="panel"><h2>어떻게 유명해졌나 · 인지도 형성 흐름</h2>
+  <div class="row"><div class="date"><b>01</b>출발</div><div class="grow"><b>침착맨 채널의 프랑스어 관련 콘텐츠 출연</b><small>프랑스어와 프랑스 생활 이야기를 설명하다가 현실적인 대처법과 독특한 말투가 클립으로 확산.</small></div></div>
+  <div class="row"><div class="date"><b>02</b>밈</div><div class="grow"><b>“빠트롱 나와!”</b><small>불이익을 당하면 프랑스어로 ‘사장’을 뜻하는 빠트롱(Patron)을 부르라는 식의 호통. 침착맨 출연 콘텐츠에서 대표 유행어로 알려짐.</small></div></div>
+  <div class="row"><div class="date"><b>03</b>확산</div><div class="grow"><b>‘코리안 트레버’ · ‘파리 민수’</b><small>언어학 박사라는 지적인 이력과 예측하기 어려운 입담·행동의 대비가 별명과 쇼츠 확산으로 이어짐.</small></div></div>
+  <div class="row"><div class="date"><b>04</b>독립</div><div class="grow"><b>자신의 이름을 건 MBC 웹예능</b><small>2026년 6월 ‘악성 내성인 정일영’ 론칭. 스타를 직접 만나 성공 공식을 배우고 연예인 데뷔를 시도하는 성장형 리얼 예능.</small></div></div>
+  <div class="hint">iMBC·뉴스1 보도는 침착맨 출연 콘텐츠 누적 조회수 1,300만 회, 쇼츠 조회수 1억 회를 소개함. 이는 보도 당시 수치이며 현재 누적치로 오해하지 말 것.</div>
+ </div>
+ <div class="panel"><h2>대표 밈 · 유행어 · 말투 소재</h2><div class="cards">
+  <article class="item"><span class="tag">가장 인지도 높은 밈</span><h3>“빠트롱 나와!”</h3><p>프랑스어 Patron(사장·고용주)을 한국식으로 강하게 외치는 말. 부당한 상황에서 사장 호출, 문제 해결을 남에게 맡기려는 태도, 괜히 큰소리치는 캐릭터에 활용 가능.</p></article>
+  <article class="item"><span class="tag">별칭</span><h3>“코리안 트레버”</h3><p>GTA 시리즈의 트레버처럼 거침없고 예측 불가하다는 인터넷식 비유. 실제 성격 진단이 아니라 대중이 붙인 캐릭터 별명으로만 사용.</p></article>
+  <article class="item"><span class="tag">별칭</span><h3>“파리 민수”</h3><p>프랑스·파리 경험을 가진 친근한 ‘민수’ 캐릭터처럼 부르는 별명. 파리, 프랑스어, 유학·교수 경력과 연결하는 가벼운 언어유희 소재.</p></article>
+  <article class="item"><span class="tag">캐릭터 대비</span><h3>“악성 내성인 / 극내성”</h3><p>말은 세고 화도 내는 듯 보이지만 정작 일상적인 부탁이나 대인 상황에서는 내성적이라는 반전. ‘화는 내가 내는데 주문은 핑크가 해’ 같은 대비형 개그에 적합.</p></article>
+  <article class="item"><span class="tag">말투·상황</span><h3>강의실에서는 교수, 밖에서는 연예인 연습생</h3><p>언어학 박사의 권위 있는 설명과 아이돌 연습생처럼 보컬 레슨·예능 미션을 수행하는 모습의 간극. ‘교수님 출석 부르다가 데뷔조 출석’처럼 전환 가능.</p></article>
+  <article class="item"><span class="tag">주의</span><h3>공식 유행어와 개사 창작 문구 구분</h3><p>위 표현 중 ‘빠트롱 나와’와 별칭은 보도·채널 소개에서 확인된 소재. 아래 개사 예시는 제작진이 새로 만든 창작 문구이며 정일영의 실제 발언이 아님.</p></article>
+ </div></div>
+ <div class="panel"><h2>출연 콘텐츠 · 방송 및 영상 레퍼런스</h2><div class="hint">확인 가능한 영상은 원본 링크를 열거나 이 페이지에서 미리 볼 수 있게 연결.</div>
+  <div class="cards">
+   <article class="item"><span class="tag">인지도 형성</span><h3>침착맨 · 프랑스어 관련 출연</h3><p>프랑스어 강의·프랑스 생활 토크에서 빠트롱 밈이 알려진 출발점. 침착맨 채널에서 ‘정일영 프랑스어’로 관련 영상을 찾아 원본 맥락 확인.</p><a href="https://www.youtube.com/results?search_query=%EC%B9%A8%EC%B0%A9%EB%A7%A8+%EC%A0%95%EC%9D%BC%EC%98%81+%ED%94%84%EB%9E%91%EC%8A%A4%EC%96%B4" target="_blank" rel="noopener">침착맨 출연 영상 검색 ↗</a></article>
+   <article class="item"><span class="tag">MBC 웹예능</span><h3>악성 내성인 정일영 · 첫 공개</h3><p>65세 프랑스 교수의 연예인 도전기. 본인의 캐릭터, 목표, 예능 포맷을 이해하기 위한 첫 시청 추천.</p><a href="https://www.youtube.com/@jungilyoung" target="_blank" rel="noopener">공식 유튜브 채널 ↗</a></article>
+   <article class="item"><span class="tag">가족·일상 공개</span><h3>와이프 있는 코리안 트레버 정일영 실존</h3><p>가족·집·강의실 등 사적인 일상과 화면 속 캐릭터의 간극을 볼 수 있는 에피소드.</p><a href="https://www.youtube.com/watch?v=9qpRix0J5Fg" target="_blank" rel="noopener">원본 영상 보기 ↗</a></article>
+   <article class="item"><span class="tag">음악·개사 참고</span><h3>개인 연습생 정일영 인생 첫 보컬 트레이닝</h3><p>이석훈에게 보컬 레슨을 받고 버즈·김건모·우즈의 곡을 부르는 에피소드. 빅뱅 커버에서 노래·가수 도전 서사를 연결하기 좋음.</p><a href="https://www.youtube.com/watch?v=3MpIOxlDOLQ" target="_blank" rel="noopener">원본 영상 보기 ↗</a></article>
+   <article class="item"><span class="tag">최근 콘텐츠</span><h3>카니를 찾아서 출연</h3><p>iMBC 보도에서 추가로 주목받은 외부 유튜브 출연. 기존 캐릭터가 다른 채널에서 어떻게 반응하는지 비교할 레퍼런스.</p><a href="https://www.youtube.com/results?search_query=%EC%B9%B4%EB%8B%88%EB%A5%BC+%EC%B0%BE%EC%95%84%EC%84%9C+%EC%A0%95%EC%9D%BC%EC%98%81" target="_blank" rel="noopener">관련 영상 검색 ↗</a></article>
+   <article class="item"><span class="tag">채널 아카이브</span><h3>악성 내성인 정일영 공식 채널</h3><p>최신 쇼츠·롱폼·게스트·유행어가 계속 추가되므로 촬영 직전 다시 확인할 것.</p><a href="https://www.youtube.com/@jungilyoung/videos" target="_blank" rel="noopener">전체 영상 보기 ↗</a></article>
+  </div>
+ </div>
+ <div class="panel"><h2>빅뱅 커버 개사 아이디어 뱅크</h2><div class="hint">원곡 가사를 길게 가져오지 않고, 곡의 리듬·정서에 맞춰 새로 쓸 수 있는 짧은 펀치라인과 상황 설정. 실제 정일영 발언처럼 소개하지 말 것.</div>
+  <div class="cards">
+   <article class="item"><span class="tag">빠트롱 밈</span><h3>사장 호출형</h3><p>“문제 생기면 빠트롱 나와 / 난 교수지만 오늘은 무대 위야”</p><p>활용: 후렴 직전 한 줄 또는 브레이크. ‘빠트롱’ 발음이 박자에 잘 붙는지 데모로 확인.</p></article>
+   <article class="item"><span class="tag">극내성 반전</span><h3>센 말과 소심한 행동</h3><p>“세상한테는 호통쳐도 / 주문할 땐 핑크 뒤에 숨어”</p><p>활용: 자이언트핑크가 정일영을 관찰하는 시점. 실제 성격을 단정하기보다 공개된 캐릭터의 반전으로 표현.</p></article>
+   <article class="item"><span class="tag">교수→연습생</span><h3>인생 2막 데뷔</h3><p>“출석 부르던 교수님 / 이제는 데뷔조 출석 체크”</p><p>활용: 벌스에서 교수 이력, 후렴에서 연예인 도전으로 전환.</p></article>
+   <article class="item"><span class="tag">파리 민수</span><h3>프랑스어 수업의 반전</h3><p>“봉주르 하던 파리 민수 / 오늘은 빅뱅 따라 부르지”</p><p>활용: 프랑스어와 K팝을 한 줄에서 연결. 프랑스어 발음 개그는 정확한 발음 확인 후 사용.</p></article>
+   <article class="item"><span class="tag">코리안 트레버</span><h3>예측 불가 캐릭터</h3><p>“교양은 박사급, 등장부터 트레버 / 다음 장면은 아무도 몰라”</p><p>활용: 영상 편집에서 갑작스러운 표정 전환·줌인과 결합.</p></article>
+   <article class="item"><span class="tag">핑크와 티키타카</span><h3>자핑이 대신 처리</h3><p>“빠트롱은 부르는데 / 계산은 왜 내가 해?”</p><p>활용: 자핑이 정일영의 말투를 받아치고 마지막에 한 번 더 반전시키는 콜앤리스폰스.</p></article>
+  </div>
+  <div class="hint">개사 방향 추천: 정일영을 일방적으로 놀리기보다 ‘교수의 권위 ↔ 내성적인 일상 ↔ 늦깎이 아이돌 도전’의 세 가지 간극을 자핑이 받아치는 구조가 인물 정보가 없는 시청자에게도 이해가 쉬움. 실존 가족·나이·사생활은 당사자가 공개한 범위에서만 가볍게 다루고, 외모·건강·가족을 조롱하는 방향은 피하기.</div>
+ </div>
+ <div class="panel"><h2>취재·출처 링크</h2>
+  <div class="row"><div class="grow"><b>iMBC 연예 · 2026.06.10</b><small>침착맨 밈, 별칭, 조회수 보도, MBC 웹예능 소개</small><a href="https://enews.imbc.com/News/RetrieveNewsInfo/507753" target="_blank" rel="noopener">기사 원문 ↗</a></div></div>
+  <div class="row"><div class="grow"><b>뉴스1 · 2026.06.10</b><small>학력·프랑스 유학·인하대 강의 이력, 연예인 도전기</small><a href="https://www.news1.kr/entertain/broadcast-tv/6192785" target="_blank" rel="noopener">기사 원문 ↗</a></div></div>
+  <div class="row"><div class="grow"><b>Weverse Magazine</b><small>극내성인 캐릭터, 빠트롱 밈의 맥락, 캐릭터 분석</small><a href="https://magazine.weverse.io/article/view/1913" target="_blank" rel="noopener">인터뷰·분석 읽기 ↗</a></div></div>
+  <div class="row"><div class="grow"><b>Careet 트렌드 리포트</b><small>채널 초기 성장과 Z세대 반응, 별칭의 맥락</small><a href="https://www.careet.net/Newsletter/Detail?id=4359&pageidx=1" target="_blank" rel="noopener">트렌드 자료 ↗</a></div></div>
+  <div class="row"><div class="grow"><b>공식 채널 통계 참고 · 2026.11</b><small>구독자·조회수는 외부 집계치이며 수시 변동</small><a href="https://open.subsub.io/channels/jungilyoung/view" target="_blank" rel="noopener">채널 분석 보기 ↗</a></div></div>
+ </div>
+ <div class="panel"><h2>개사 작업 메모</h2><div class="hint">촬영·작사팀이 실제로 확정한 문구와 추가 조사 사항을 적어 공동 계정에 저장할 수 있어.</div><div class="field"><label>선택한 빅뱅 원곡 / 파트</label><input id="jySong" placeholder="예: 곡명 · 1절 후렴"></div><div class="field"><label>자핑 개사 메모</label><textarea id="jyMemo" placeholder="정일영 관련 소재, 자핑의 받아치기, 박자에 맞춘 후보 문구"></textarea></div><button class="primary" type="button" onclick="saveJYMemo()">개사 메모 저장 · 공동 계정</button><p id="jySaved" class="hint" role="status"></p></div>
+</section>
 <section class="view hidden" id="tasks"><div class="panel"><h2>일정 추가</h2><div class="hint">촬영, 편집, 업로드 일정을 등록해.</div><form id="tf"><div class="field"><label>일정 제목</label><input id="tt" required placeholder="예: 릴스 촬영"></div><div class="two"><div class="field"><label>날짜</label><input id="td" type="date" required></div><div class="field"><label>구분</label><select id="ty"><option>촬영</option><option>편집</option><option>업로드</option><option>회의</option><option>기타</option></select></div></div><div class="field"><label>담당자</label><select id="to"><option>공동</option><option>자이언트핑크</option><option>찬구</option></select></div><button class="primary">+ 일정 등록</button></form></div><div class="panel"><h2>작업 일정</h2><div class="hint">완료한 일정은 체크 표시</div><div id="taskRows"></div></div></section>
 <div class="foot">GINATPINK MANAGER CHANGU · VERSION 1.2 · SHARED WORKSPACE</div></div></main>
 <script>
@@ -252,7 +313,8 @@ function saveCampaignGate(){
  db.campaign={classification:el('campaignClass').value,approval:el('campaignApproval').value,evidence:el('campaignEvidence').value,ad:el('campaignAd').value};
  save();el('campaignSaved').textContent='검토 정보 저장 완료 · 같은 계정으로 로그인한 기기와 동기화돼.';
 }
-function render(){if(db.campaign){
+function saveJYMemo(){db.jungilyoungMemo={song:el('jySong').value,memo:el('jyMemo').value};save();el('jySaved').textContent='개사 메모 저장 완료 · 공동 계정과 동기화돼.'}
+function render(){if(db.jungilyoungMemo){if(el('jySong'))el('jySong').value=db.jungilyoungMemo.song||'';if(el('jyMemo'))el('jyMemo').value=db.jungilyoungMemo.memo||''}if(db.campaign){
  if(el('campaignClass'))el('campaignClass').value=db.campaign.classification||'';
  if(el('campaignApproval'))el('campaignApproval').value=db.campaign.approval||'';
  if(el('campaignEvidence'))el('campaignEvidence').value=db.campaign.evidence||'';
